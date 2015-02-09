@@ -1,0 +1,66 @@
+{%extends 'clinic/base.html'%}
+
+        {%block title_heading%}
+
+         Patients
+
+        {%endblock%}
+
+        {%block content%}
+
+        {% if patients%}
+
+        <table class="table table-bordered">
+
+            <thead>
+
+              <tr>
+                  <th> First Name</th>
+                  <th> Last Name</th>
+                  <th> Gender</th>
+                  <th> Address</th>
+                  <th> Phone</th>
+                  <th> Date of Birth</th>
+                  <th> Age </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+            {%for patient in patients%}
+
+            <tr>
+                <td>{{patient.first_name}}</td>
+                <td>{{patient.last_name}}</td>
+                <td>{{patient.gender}}</td>
+                <td>{{patient.address}}</td>
+                <td>{{patient.phone}}</td>
+                <td>{{patient.dob}}</td>
+                <td>{{patient.age}}</td>
+                <td><a href="/clinic/patient/edit/{{patient.id}}">Edit</a></td>
+                <td><a href="/clinic/patient/delete/{{patient.id}}">Delete</a></td>
+
+
+            </tr>
+
+            {%endfor%}
+
+            </tbody>
+
+        </table>
+
+
+
+        {%else%}
+
+        <p> No patients added to database yet!</p>
+
+        {%endif%}
+
+        {%endblock%}
+
+
+
+

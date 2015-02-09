@@ -1,0 +1,66 @@
+{%extends 'clinic/base.html'%}
+
+        {%block title_heading%}
+
+         Staff Members
+
+        {%endblock%}
+
+        {%block content%}
+
+        {% if staff%}
+
+        <table class="table table-bordered">
+
+            <thead>
+
+              <tr>
+                  <th> First Name</th>
+                  <th> Last Name</th>
+                  <th> Phone</th>
+                  <th> Alternate Phone</th>
+                  <th> Email</th>
+                  <th> Designation</th>
+
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+            {%for member in staff%}
+
+            <tr>
+                <td>{{member.first_name}}</td>
+                <td>{{member.last_name}}</td>
+                <td>{{member.phone}}</td>
+                <td>{{member.alternate_phone}}</td>
+                <td>{{member.email}}</td>
+                <td>{{member.deignation}}</td>
+
+                <td><a href="/clinic/staff/edit/{{member.id}}">Edit</a></td>
+                <td><a href="/clinic/staff/delete/{{member.id}}">Delete</a></td>
+
+
+            </tr>
+
+            {%endfor%}
+
+            </tbody>
+
+        </table>
+
+
+
+        {%else%}
+
+        <p> No patients added to database yet!</p>
+
+        {%endif%}
+
+        {%endblock%}
+
+
+
+

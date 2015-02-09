@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from django.core.urlresolvers import reverse,reverse_lazy
 
 # Create your models here.
 
@@ -64,6 +65,9 @@ class Staff(models.Model):
     class Meta:
         verbose_name_plural = 'Staff'
         ordering =['first_name']
+
+    def get_absolute_url(self):
+        return reverse('staff-detail', kwargs={'pk': self.pk})
 
     def __unicode__(self):
 

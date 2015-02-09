@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     'expenditure',
     'assets',
     'suit',
+    'widget_tweaks',
 )
 
 MIDDLEWARE_CLASSES = (

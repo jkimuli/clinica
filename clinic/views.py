@@ -17,28 +17,24 @@ def index(request):
 class PatientListView(ListView):
     model = Patient
     context_object_name = "patients"
-    template_name = 'clinic/index.html'
+    template_name = 'clinic/patient_list.html'
 
 
 class StaffListView(ListView):
     model = Staff
     context_object_name = "staff"
-    template_name = "clinic/list_staff.html"
+    template_name = "clinic/staff_list.html"
 
 
 class VisitListView(ListView):
     model = Visit
     context_object_name = "visits"
-    template_name = "clinic/list_visit.html"
+    template_name = "clinic/visit_list.html"
 
 
 class CreatePatientView(CreateView):
     model = Patient
     template_name = 'clinic/patient_add.html'
-
-    def get_success_url(self):
-        pass
-
 
 
 class CreateStaffView(CreateView):
@@ -48,7 +44,7 @@ class CreateStaffView(CreateView):
 
 class CreateVisitView(CreateView):
     model = Visit
-    template_name = 'clinic/add_visit.html'
+    template_name = 'clinic/visit_add.html'
 
 
 class UpdatePatientView(UpdateView):
@@ -62,6 +58,17 @@ class UpdateStaffView(UpdateView):
 
 
 class UpdateVisitView(UpdateView):
+    pass
+
+
+class DetailStaffView(DetailView):
+    model = Staff
+
+
+class DetailPatientView(DetailView):
+    pass
+
+class DetailVisitView(DetailView):
     pass
 
 
