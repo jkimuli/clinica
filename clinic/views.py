@@ -4,8 +4,14 @@ from django.core.urlresolvers import reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 
 from django.views.generic import ListView
+from django.shortcuts import render
 
 from clinic.models import Patient, Staff, Visit
+
+
+def index(request):
+
+    return render(request,'clinic/index.html')
 
 
 class PatientListView(ListView):
@@ -28,19 +34,16 @@ class VisitListView(ListView):
 
 class CreatePatientView(CreateView):
     model = Patient
-    template_name = 'clinic/add_patient.html'
+    template_name = 'clinic/patient_add.html'
 
     def get_success_url(self):
         pass
 
-    '''@method_decorator(login_required())
-    def dispatch(self, request, *args, **kwargs):
-        return super(CreatePatientView,self).dispatch(*args,**kwargs)'''
 
 
 class CreateStaffView(CreateView):
     model = Staff
-    template_name = 'clinic/add_staff.html'
+    template_name = 'clinic/staff_add.html'
 
 
 class CreateVisitView(CreateView):
@@ -50,12 +53,12 @@ class CreateVisitView(CreateView):
 
 class UpdatePatientView(UpdateView):
     model = Patient
-    template_name = 'clinic/add_patient.html'
+    template_name = 'clinic/patient_add.html'
 
 
 class UpdateStaffView(UpdateView):
     model = Staff
-    template_name = 'clinic/add_staff.html'
+    template_name = 'clinic/staff_add.html'
 
 
 class UpdateVisitView(UpdateView):
