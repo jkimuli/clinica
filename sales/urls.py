@@ -2,20 +2,23 @@ __author__ = 'julius'
 
 from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required
-from sales import views
+from . import views
 
 urlpatterns = patterns(' ',
 
-    url(r'item/$', views.ItemListView.as_view(), name='item-list'),
-    url(r'^test/$', views.LabTestListView.as_view(), name='test-list'),
+    url(r'item/$', views.ItemListView.as_view(), name='item_list'),
+    url(r'^test/$', views.LabTestListView.as_view(), name='test_list'),
 
-    url(r'^item/new/$', login_required(views.CreateItemView.as_view()), name='item-new'),
-    url(r'^test/new/$', login_required(views.CreateLabTestView.as_view()), name='test-new'),
+    url(r'^item/new/$', login_required(views.ItemCreateView.as_view()), name='item_new'),
+    url(r'^test/new/$', login_required(views.LabTestCreateView.as_view()), name='test_new'),
 
-    url(r'^item/edit/(?P<pk>[0-9]+)/$', login_required(views.UpdateItemView.as_view()),name='item-edit'),
-    url(r'^test/edit/(?P<pk>[0-9]+)/$', login_required(views.UpdateLabTestView.as_view()),name='test-edit'),
+    url(r'^item/edit/(?P<pk>\d+)/$', login_required(views.ItemUpdateView.as_view()),name='item_edit'),
+    url(r'^test/edit/(?P<pk>\d+)/$', login_required(views.LabTestUpdateView.as_view()),name='test_edit'),
 
-    #url(r'^sale/$', views.SaleListView.as_view(),name='sale-list'),
-    url(r'^sale/new/$', views.CreateSaleInline.as_view(), name='sale-new'),
+    url(r'item/(?P<pk>\d+)/$',views.ItemDetailView.as_view(),name='item_detail'),
+    url(r'test/(?P<pk>\d+)/$',views.LabTestDetailView.as_view(),name='test_detail'),
+
+    #url(r'^sale/$', views.SaleListView.as_view(),name='sale_list'),
+    url(r'^sale/new/$', views.CreateSaleInline.as_view(), name='sale_new'),
 
 )

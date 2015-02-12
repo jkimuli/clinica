@@ -47,6 +47,7 @@ TEMPLATE_DIRS = (
 # Application definition
 
 INSTALLED_APPS = (
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,7 +58,7 @@ INSTALLED_APPS = (
     'sales',
     'expenditure',
     'assets',
-    'suit',
+    
     'widget_tweaks',
 )
 

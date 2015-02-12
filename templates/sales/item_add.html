@@ -1,0 +1,77 @@
+{%extends 'sales/base.html'%}
+{%load widget_tweaks%}
+
+
+    {%block title_heading%}
+
+        Add Drug Item to Store
+
+     {%endblock%}
+
+    {%block content%}
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-sm-5">
+
+                     <form action="{%url 'item_new' %}" method="POST" role="form" class="'form-horizontal">
+
+
+            {%csrf_token%}
+
+           <div class="form-group">
+               {{form.name.errors}}
+               <label class="control-label">Name:</label>
+
+                   {{form.name|add_class:'form-control'}}
+           </div>
+
+           <div class="form-group">
+               {{form.unit_cost.errors}}
+               <label class="control-label">Retail Price:</label>
+
+                   {{form.unit_cost|add_class:'form-control'}}
+
+           </div>
+
+           <div class="form-group">
+               {{form.cost_price.errors}}
+               <label class="control-label">{{form.cost_price.verbose_name}}Cost Price:</label>
+
+                   {{form.cost_price|add_class:'form-control'}}
+
+           </div>
+
+           <div class="form-group">
+               {{form.quantity.errors}}
+               <label class="control-label">Quantity:</label>
+
+                   {{form.quantity|add_class:'form-control'}}
+
+           </div>
+
+
+
+           <div class="form-group">
+
+
+                   <button type="submit" class="btn btn-primary">Save Changes</button>
+
+
+
+           </div>
+    </form>
+
+                </div>
+
+                <div class="col-sm-7">
+
+                </div>
+            </div>
+        </div>
+
+
+
+   {%endblock%}

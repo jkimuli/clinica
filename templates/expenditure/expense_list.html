@@ -1,0 +1,59 @@
+{%extends 'expenditure/base.html'%}
+
+        {%block title_heading%}
+
+        Expenses List
+
+        {%endblock%}
+
+
+      {%block content%}
+
+        {%if expenses%}
+
+        <table class="table table-bordered">
+
+            <thead>
+
+              <tr>
+                  <th> Date Added</th>
+                  <th> Particulars</th>
+                  <th> Amount</th>
+                  <th> Incurred By</th>
+
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+            {%for expense in expenses%}
+
+            <tr>
+                <td>{{expense.expense_date}}</td>
+                <td>{{expense.particulars}}</td>
+                <td>{{expense.amount}}</td>
+                <td>{{expense.incurred_by}}</td>
+
+                <td><a href="/expenses/edit/{{expense.id}}">Edit</a></td>
+                <td><a href="/expenses/delete/{{expense.id}}">Delete</a></td>
+
+
+            </tr>
+
+            {%endfor%}
+
+            </tbody>
+
+        </table>
+
+
+
+        {%else%}
+
+        <p> No expenses incurred yet!</p>
+
+        {%endif%}
+
+        {%endblock%}

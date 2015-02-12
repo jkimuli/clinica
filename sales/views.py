@@ -1,41 +1,52 @@
 # Create your views here.
 
-from django.views.generic import ListView, CreateView, DeleteView, UpdateView
+from django.views.generic import ListView, CreateView, DeleteView, UpdateView,DetailView
+
 from .models import LabTest, Item,Sale,SaleItem,SaleTest
+
 from extra_views import InlineFormSetView,CreateWithInlinesView
 
 
 
 class LabTestListView(ListView):
     model = LabTest
-    context_object_name = "tests"
-    template_name = "clinica/list_test.html"
+    context_object_name = "lab_tests"
+    template_name = "sales/test_list.html"
 
 
 class ItemListView(ListView):
     model = Item
-    context_object_name = "items"
-    template_name = "clinica/list_item.html"
+    context_object_name = "drugs"
+    template_name = "sales/item_list.html"
 
 
-class CreateItemView(CreateView):
+class ItemCreateView(CreateView):
     model = Item
-    template_name = 'clinica/add_item.html'
+    template_name = 'sales/item_add.html'
 
 
-class CreateLabTestView(CreateView):
+class LabTestCreateView(CreateView):
     model = LabTest
-    template_name = 'clinica/add_lab_test.html'
+    template_name = 'sales/test_add.html'
 
 
-class UpdateItemView(UpdateView):
+class ItemUpdateView(UpdateView):
     model = Item
-    template_name = 'clinica/add_item.html'
+    template_name = 'sales/item_add.html'
 
 
-class UpdateLabTestView(UpdateView):
+class LabTestUpdateView(UpdateView):
     model = LabTest
-    template_name = 'clinica/add_lab_test.html'
+    template_name = 'sales/add_lab_test.html'
+
+
+class ItemDetailView(DetailView):
+
+    pass
+
+
+class LabTestDetailView(DetailView):
+    pass
 
 
 class ItemInline(InlineFormSetView):

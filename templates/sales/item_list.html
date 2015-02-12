@@ -1,0 +1,59 @@
+{%extends 'expenditure/base.html'%}
+
+        {%block title_heading%}
+
+        Drugs and Medicines List
+
+        {%endblock%}
+
+
+      {%block content%}
+
+        {%if drugs%}
+
+        <table class="table table-bordered">
+
+            <thead>
+
+              <tr>
+                  <th> Name</th>
+                  <th> Retail Price</th>
+                  <th> Cost Price</th>
+                  <th> Quantity</th>
+
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+            {%for drug in drugs%}
+
+            <tr>
+                <td>{{drug.name}}</td>
+                <td>{{drug.unit_cost}}</td>
+                <td>{{drug.cost_price}}</td>
+                <td>{{drug.quantity}}</td>
+
+                <td><a href="/sales/item/edit/{{drug.id}}">Edit</a></td>
+                <td><a href="/sales/item/delete/{{drug.id}}">Delete</a></td>
+
+
+            </tr>
+
+            {%endfor%}
+
+            </tbody>
+
+        </table>
+
+
+
+        {%else%}
+
+        <p> No drugs added yet!</p>
+
+        {%endif%}
+
+        {%endblock%}
