@@ -1,0 +1,61 @@
+{%extends 'expenditure/base.html'%}
+
+        {%block title_heading%}
+
+        Medical Suppliers
+
+        {%endblock%}
+
+
+      {%block content%}
+
+        {%if suppliers%}
+
+        <table class="table table-bordered">
+
+            <thead>
+
+              <tr>
+                  <th> Name</th>
+                  <th> Address</th>
+                  <th> Phone</th>
+                  <th> Alternate Phone</th>
+                  <th> Email</th>
+
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+            {%for supplier in suppliers%}
+
+            <tr>
+                <td>{{supplier.name}}</td>
+                <td>{{supplier.address}}</td>
+                <td>{{supplier.phone}}</td>
+                <td>{{supplier.alternate_phone}}</td>
+                <th>{{supplier.email}}</th>
+
+                <td><a href="/sales/supplier/edit/{{supplier.id}}">Edit</a></td>
+                <td><a href="/sales/supplier/delete/{{supplier.id}}">Delete</a></td>
+
+
+            </tr>
+
+            {%endfor%}
+
+            </tbody>
+
+        </table>
+
+
+
+        {%else%}
+
+        <p> No suppliers added yet!</p>
+
+        {%endif%}
+
+        {%endblock%}

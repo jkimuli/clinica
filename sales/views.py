@@ -2,10 +2,9 @@
 
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView,DetailView
 
-from .models import LabTest, Item,Sale,SaleItem,SaleTest
+from .models import LabTest, Item,Sale,SaleItem,SaleTest,Supplier,Debtor,Customer
 
 from extra_views import InlineFormSetView,CreateWithInlinesView
-
 
 
 class LabTestListView(ListView):
@@ -37,7 +36,7 @@ class ItemUpdateView(UpdateView):
 
 class LabTestUpdateView(UpdateView):
     model = LabTest
-    template_name = 'sales/add_lab_test.html'
+    template_name = 'sales/test_add.html'
 
 
 class ItemDetailView(DetailView):
@@ -47,6 +46,31 @@ class ItemDetailView(DetailView):
 
 class LabTestDetailView(DetailView):
     pass
+
+
+class SupplierListView(ListView):
+    model = Supplier
+    template_name = 'sales/supplier_list.html'
+    context_object_name = 'suppliers'
+
+
+class SupplierDetailView(DetailView):
+    pass
+
+
+class SupplierDeleteView(DeleteView):
+    pass
+
+
+class SupplierCreateView(CreateView):
+    model = Supplier
+    template_name = 'sales/supplier_add.html'
+
+class SupplierUpdateView(UpdateView):
+    model = Supplier
+    template_name = 'sales/supplier_add.html'
+
+
 
 
 class ItemInline(InlineFormSetView):

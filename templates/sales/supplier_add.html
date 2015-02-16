@@ -1,0 +1,85 @@
+{%extends 'sales/base.html'%}
+{%load widget_tweaks%}
+
+
+    {%block title_heading%}
+
+        Add Supplier to Supplier's Database
+
+     {%endblock%}
+
+    {%block content%}
+
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-sm-5">
+
+                     <form action="{%url 'supplier_new' %}" method="POST" role="form" class="'form-horizontal">
+
+
+            {%csrf_token%}
+
+           <div class="form-group">
+               {{form.name.errors}}
+               <label class="control-label">Name:</label>
+
+                   {{form.name|add_class:'form-control'}}
+           </div>
+
+           <div class="form-group">
+               {{form.address.errors}}
+               <label class="control-label">Address:</label>
+
+                   {{form.address|add_class:'form-control'}}
+
+           </div>
+
+           <div class="form-group">
+               {{form.phone.errors}}
+               <label class="control-label">Phone:</label>
+
+                   {{form.phone|add_class:'form-control'}}
+
+           </div>
+
+           <div class="form-group">
+               {{form.alternate_phone.errors}}
+               <label class="control-label">Alternate Phone:</label>
+
+                   {{form.alternate_phone|add_class:'form-control'}}
+
+           </div>
+
+           <div class="form-group">
+               {{form.email.errors}}
+               <label class="control-label">Email:</label>
+
+                   {{form.email|add_class:'form-control'}}
+
+           </div>
+
+
+
+           <div class="form-group">
+
+
+                   <button type="submit" class="btn btn-primary">Save Changes</button>
+
+
+
+           </div>
+    </form>
+
+                </div>
+
+                <div class="col-sm-7">
+
+                </div>
+            </div>
+        </div>
+
+
+
+   {%endblock%}

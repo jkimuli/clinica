@@ -10,6 +10,9 @@ class LabTest(models.Model):
     def __unicode__(self):
         return u'%s' % self.type
 
+    def get_absolute_url(self):
+        pass
+
     class Meta:
         verbose_name_plural = 'Lab Tests'
         ordering = ['type']
@@ -46,11 +49,11 @@ class Supplier(models.Model):
 
 
 class Customer(models.Model):
-    name = models.CharField(max_length=50, verbose_name='First Name')
+    name = models.CharField(max_length=50, verbose_name='Full Name')
 
     def __unicode__(self):
 
-        return '%s  %s ' % self.name
+        return u'%s ' % self.name
 
 
 class Debtor(models.Model):
