@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='Customer',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=50, verbose_name=b'First Name')),
+                ('name', models.CharField(max_length=50, verbose_name=b'Full Name')),
             ],
             options={
             },
@@ -43,7 +43,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100, verbose_name=b'Drug Name')),
                 ('quantity', models.PositiveIntegerField(default=0, verbose_name=b'quantity')),
                 ('unit_cost', models.PositiveIntegerField(default=0, verbose_name=b'Retail Price')),
-                ('cost_price', models.PositiveIntegerField(default=0, verbose_name=b'Wholesale Price')),
             ],
             options={
                 'ordering': ['name'],

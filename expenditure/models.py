@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 
@@ -12,6 +13,9 @@ class Expense(models.Model):
     def __unicode__(self):
 
         return '%s - %d incurred by %s' % (self.particulars, self.amount, self.incurred_by)
+
+    def get_absolute_url(self):
+        return reverse('expense_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name_plural = 'Expenses'

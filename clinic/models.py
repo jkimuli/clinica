@@ -1,3 +1,4 @@
+
 from django.db import models
 import datetime
 from django.core.urlresolvers import reverse,reverse_lazy
@@ -46,6 +47,9 @@ class Patient(models.Model):
 
         return u'%s %s' % (self.first_name, self.last_name)
 
+    def get_absolute_url(self):
+        return reverse('patient-detail', kwargs={'pk': self.pk})
+
     def _get_full_name(self):
         """returns the person's full name"""
 
@@ -84,61 +88,18 @@ class Staff(models.Model):
 class Visit(models.Model):
     patient_id = models.ForeignKey(Patient, verbose_name="patient")
     category = models.CharField(max_length=10, choices=CLINIC_TYPE, verbose_name="Visit Type")
-    symptoms = models.TextField(verbose_name='symptoms')
     examination = models.TextField(verbose_name='Physical Examination')
     diagnosis = models.TextField(verbose_name="diagnosis")
     attendant = models.ForeignKey(Staff, verbose_name='attendant')
     consultation = models.BooleanField(default='True', verbose_name="consultation")
     visit_date = models.DateTimeField(auto_now_add=True, verbose_name="Visit Date")
-    lab_tests = models.ManyToManyField('sales.LabTest', verbose_name=' Lab Tests', through='VisitTest')
-    prescriptions = models.ManyToManyField('sales.Item', verbose_name='Prescriptions',  through='VisitItem')
+    lab_tests = models.TextField(verbose_name=' Lab Tests',blank=True,default="None")
+    prescriptions = models.TextField(verbose_name='Prescriptions',blank=True,default="None")
 
     class Meta:
         verbose_name_plural = 'Clinic Visits'
 
-    def lab_test_names(self):
-        '''return names of lab tests for each visit '''
 
-        return ', '.join([a.type for a in self.lab_tests.all()])
-
-    def prescription_names(self):
-        """return prescriptions for a given visit"""
-
-        return ','.join([a.name for a in self.prescriptions.all()])
-
-    lab_test_names.short_description = 'Lab Tests'
-    prescription_names.short_description = 'Prescriptions'
-
-
-class VisitTest(models.Model):
-    test = models.ForeignKey('sales.LabTest')
-    visit = models.ForeignKey(Visit)
-
-    class Meta:
-
-        verbose_name = 'lab test'
-        verbose_name_plural = 'Lab Tests Taken'
-
-
-class VisitItem(models.Model):
-    item = models.ForeignKey('sales.Item')
-    visit = models.ForeignKey(Visit)
-    #quantity = models.PositiveIntegerField(default=0, verbose_name="quantity")
-
-    class Meta:
-        verbose_name = 'prescription'
-        verbose_name_plural = 'Prescribed Drugs'
-
-    ''' def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-
-        super(VisitItem, self).save(False, False, None, None)
-
-        #update quantity field in Parent Model item
-
-        self.item.quantity -= self.quantity
-
-        self.item.save() '''
 
 
 

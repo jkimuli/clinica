@@ -10,7 +10,7 @@ class TestAdmin(admin.ModelAdmin):
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'quantity', 'unit_cost', 'cost_price',)
+    list_display = ('name', 'quantity', 'unit_cost',)
     search_fields = ('name',)
 
 

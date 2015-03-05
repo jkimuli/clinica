@@ -50,36 +50,17 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('category', models.CharField(max_length=10, verbose_name=b'Visit Type', choices=[(b'IN', b'INPATIENT'), (b'OUT', b'OUTPATIENT')])),
-                ('symptoms', models.TextField(verbose_name=b'symptoms')),
                 ('examination', models.TextField(verbose_name=b'Physical Examination')),
                 ('diagnosis', models.TextField(verbose_name=b'diagnosis')),
                 ('consultation', models.BooleanField(default=b'True', verbose_name=b'consultation')),
                 ('visit_date', models.DateTimeField(auto_now_add=True, verbose_name=b'Visit Date')),
+                ('lab_tests', models.TextField(default=b'None', verbose_name=b' Lab Tests', blank=True)),
+                ('prescriptions', models.TextField(default=b'None', verbose_name=b'Prescriptions', blank=True)),
+                ('attendant', models.ForeignKey(verbose_name=b'attendant', to='clinic.Staff')),
+                ('patient_id', models.ForeignKey(verbose_name=b'patient', to='clinic.Patient')),
             ],
             options={
                 'verbose_name_plural': 'Clinic Visits',
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='VisitItem',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-            ],
-            options={
-                'verbose_name': 'prescription',
-                'verbose_name_plural': 'Prescribed Drugs',
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='VisitTest',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-            ],
-            options={
-                'verbose_name': 'lab test',
-                'verbose_name_plural': 'Lab Tests Taken',
             },
             bases=(models.Model,),
         ),

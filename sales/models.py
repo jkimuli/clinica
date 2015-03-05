@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 
@@ -11,7 +12,7 @@ class LabTest(models.Model):
         return u'%s' % self.type
 
     def get_absolute_url(self):
-        pass
+        return reverse('test_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name_plural = 'Lab Tests'
@@ -22,10 +23,13 @@ class Item(models.Model):
     name = models.CharField(max_length=100, verbose_name="Drug Name")
     quantity = models.PositiveIntegerField(default=0, verbose_name="quantity")
     unit_cost = models.PositiveIntegerField(default=0, verbose_name="Retail Price")
-    cost_price = models.PositiveIntegerField(default=0, verbose_name="Wholesale Price")
+
 
     def __unicode__(self):
         return u'%s' % self.name
+
+    def get_absolute_url(self):
+        return reverse('item_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name_plural = 'Prescription Drugs'
@@ -40,8 +44,10 @@ class Supplier(models.Model):
     email = models.EmailField(max_length=100, verbose_name='Email', blank=True)
 
     def __unicode__(self):
-
         return u'%s' % self.name
+
+    def get_absolute_url(self):
+        return reverse('supplier_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name_plural = 'Suppliers'

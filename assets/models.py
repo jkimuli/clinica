@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import datetime
 
+from django.core.urlresolvers import reverse
+
 # Create your models here.
 
 ASSET_INVENTORY = (
@@ -21,6 +23,9 @@ class Asset(models.Model):
     def __unicode__(self):
 
         return u'%s - %s' % (self.name, self.category)
+
+    def get_absolute_url(self):
+        return reverse('asset_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = 'asset'

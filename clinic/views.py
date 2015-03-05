@@ -5,6 +5,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 
 from django.views.generic import ListView
 from django.shortcuts import render
+from django.core.urlresolvers import reverse_lazy
 
 from clinic.models import Patient, Staff, Visit
 
@@ -66,10 +67,27 @@ class DetailStaffView(DetailView):
 
 
 class DetailPatientView(DetailView):
-    pass
+    model = Patient
+
 
 class DetailVisitView(DetailView):
-    pass
+    model = Visit
+
+
+class DeletePatientView(DeleteView):
+    model = Patient
+    success_url = reverse_lazy('patient_list')
+
+
+class DeleteStaffView(DeleteView):
+    model = Staff
+    success_url = reverse_lazy('staff_list')
+
+
+class DeleteVisitView(DeleteView):
+    model = Visit
+    success_url = reverse_lazy('visit_list')
+
 
 
 
