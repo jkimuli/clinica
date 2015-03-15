@@ -91,7 +91,6 @@ class Visit(models.Model):
     examination = models.TextField(verbose_name='Physical Examination')
     diagnosis = models.TextField(verbose_name="diagnosis")
     attendant = models.ForeignKey(Staff, verbose_name='attendant')
-    consultation = models.BooleanField(default='True', verbose_name="consultation")
     visit_date = models.DateTimeField(auto_now_add=True, verbose_name="Visit Date")
     lab_tests = models.TextField(verbose_name=' Lab Tests',blank=True,default="None")
     prescriptions = models.TextField(verbose_name='Prescriptions',blank=True,default="None")
