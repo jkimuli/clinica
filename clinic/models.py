@@ -33,11 +33,11 @@ FUNCTIONAL_STATUS = (
 class Patient(models.Model):
     first_name = models.CharField(max_length=30, verbose_name='First Name')
     last_name = models.CharField(max_length=30, verbose_name='Last Name')
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name='gender')
-    address = models.CharField(max_length=100, blank=True, verbose_name='address')
-    phone = models.CharField(max_length=30, blank=True, verbose_name='phone')
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name='Gender')
+    address = models.CharField(max_length=100, blank=True, verbose_name='Address')
+    phone = models.CharField(max_length=30, blank=True, verbose_name='Phone')
     dob = models.CharField(max_length=30, verbose_name='Date of Birth', help_text='Please enter date of birth in format:dd/mm/yy', blank=True)
-    age = models.PositiveSmallIntegerField(default=0,verbose_name='age')
+    age = models.PositiveSmallIntegerField(default=0,verbose_name='Age')
 
     class Meta:
         verbose_name_plural = 'Patients'
@@ -58,16 +58,16 @@ class Patient(models.Model):
     full_name = property(_get_full_name)
 
 
-class Staff(models.Model):
+class Employee(models.Model):
     first_name = models.CharField(max_length=30,verbose_name='First Name')
     last_name = models.CharField(max_length=30,verbose_name='Last Name')
-    phone = models.CharField(max_length=30,verbose_name='phone')
+    phone = models.CharField(max_length=30,verbose_name='Phone')
     alternate_phone = models.CharField(max_length=30,blank=True,verbose_name='Alternate Phone')
-    email = models.EmailField(blank=True,verbose_name='email')
-    designation = models.CharField(max_length=50,choices=STAFF_DESIGNATION,verbose_name='designation')
+    email = models.EmailField(blank=True,verbose_name='Email')
+    designation = models.CharField(max_length=50,choices=STAFF_DESIGNATION,verbose_name='Designation')
 
     class Meta:
-        verbose_name_plural = 'Staff'
+        verbose_name_plural = 'Employees'
         ordering =['first_name']
 
     def get_absolute_url(self):
@@ -86,15 +86,14 @@ class Staff(models.Model):
 
 
 class Visit(models.Model):
-    patient_id = models.ForeignKey(Patient, verbose_name="patient")
+    patient_id = models.ForeignKey(Patient, verbose_name="Patient")
     category = models.CharField(max_length=10, choices=CLINIC_TYPE, verbose_name="Visit Type")
     examination = models.TextField(verbose_name='Physical Examination')
-    diagnosis = models.TextField(verbose_name="diagnosis")
-    attendant = models.ForeignKey(Staff, verbose_name='attendant')
-    consultation = models.BooleanField(default='True', verbose_name="consultation")
+    diagnosis = models.TextField(verbose_name="Diagnosis")
+    attendant = models.ForeignKey(Employee, verbose_name='Attendant')
     visit_date = models.DateTimeField(auto_now_add=True, verbose_name="Visit Date")
-    lab_tests = models.TextField(verbose_name=' Lab Tests',blank=True,default="None")
-    prescriptions = models.TextField(verbose_name='Prescriptions',blank=True,default="None")
+    lab_tests = models.TextField(verbose_name=' Lab Tests Taken',blank=True,default="None")
+    prescriptions = models.TextField(verbose_name='Prescriptions Required',blank=True,default="None")
 
     class Meta:
         verbose_name_plural = 'Clinic Visits'

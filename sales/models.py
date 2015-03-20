@@ -3,37 +3,72 @@ from django.core.urlresolvers import reverse
 
 # Create your models here.
 
+PRODUCT_CATEGORIES = (
 
-class LabTest(models.Model):
-    type = models.CharField(max_length=100, verbose_name="name")
-    unit_cost = models.PositiveIntegerField(default=0, verbose_name='Unit Cost')
+    ('FEE', 'CLINICAL FEES'),
+    ('TEST', 'LAB_TESTS'),
+    ('DRUG', 'PRESCRIPTION DRUG'),
+)
 
-    def __unicode__(self):
-        return u'%s' % self.type
 
-    def get_absolute_url(self):
-        return reverse('test_detail', kwargs={'pk': self.pk})
+class Order(models.Model):
+    order_date = models.DateTimeField(auto_now_add=True)
+    processed_by = models.ForeignKey('clinic.Employee', verbose_name='Employee Name')
 
-    class Meta:
-        verbose_name_plural = 'Lab Tests'
-        ordering = ['type']
+    total = models.DecimalField(default=0, verbose_name="Amount",decimal_places=2,max_digits=12,editable=False)
+
+    '''def item_names(self):
+        """return items for a given order"""
+
+        return ','.join([a.name for a in self.items.all()])
+
+    #Calculating total order amount from the subtotals from each order item
+
+    def total_amount(self):
+
+        amount = 0
+
+        for a in self.items.all():
+            amount += a.sub_total
+
+        return amount
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+
+        self.total = self.total_amount()
+
+    item_names.short_description = 'Order Items'''''
 
 
 class Item(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Drug Name")
-    quantity = models.PositiveIntegerField(default=0, verbose_name="quantity")
-    unit_cost = models.PositiveIntegerField(default=0, verbose_name="Retail Price")
-
+    name = models.CharField(max_length=100, verbose_name='Item Name')
+    unit_cost = models.DecimalField(default=0, verbose_name='Retail Price', decimal_places=2,max_digits=12)
+    type = models.CharField(max_length=10, choices=PRODUCT_CATEGORIES, verbose_name='Item Category')
 
     def __unicode__(self):
+
         return u'%s' % self.name
+
+
+class OrderItem(models.Model):
+    item = models.ForeignKey(Item, verbose_name='Item Name')
+    order_id = models.ForeignKey(Order,verbose_name= 'Order')
+    quantity = models.PositiveSmallIntegerField(default=1,verbose_name='Quantity')
+
+    @property
+    def sub_total(self):
+
+        return self.item.unit_cost * self.quantity
+
+    def __unicode__(self):
+        return u'%s' % self.pk
 
     def get_absolute_url(self):
         return reverse('item_detail', kwargs={'pk': self.pk})
 
     class Meta:
-        verbose_name_plural = 'Prescription Drugs'
-        ordering = ['name']
+        verbose_name_plural = 'Item Name'
 
 
 class Supplier(models.Model):
@@ -54,129 +89,15 @@ class Supplier(models.Model):
         ordering = ['name']
 
 
-class Customer(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Full Name')
-
-    def __unicode__(self):
-
-        return u'%s ' % self.name
-
-
 class Debtor(models.Model):
-    debt_date = models.DateField(auto_now_add=True, verbose_name='date')
+    debt_date = models.DateTimeField(auto_now_add=True, verbose_name='Date')
     customer = models.CharField(max_length=100,verbose_name='customer')
-    bill = models.PositiveIntegerField(verbose_name='bill')
+    bill = models.PositiveIntegerField(verbose_name='Bill')
     paid = models.PositiveIntegerField(verbose_name='Amount Paid')
-    balance = models.PositiveIntegerField(verbose_name='balance')
+    balance = models.PositiveIntegerField(verbose_name='Balance')
 
     class Meta:
         verbose_name_plural = 'Debtors'
-
-    def save(self, *args, **kwargs):
-
-        #calculate balance before saving a debtor into the database
-
-        self.balance = self.bill - self.paid
-
-        super(Debtor, self).save(*args, **kwargs)
-
-
-class Sale(models.Model):
-    customer = models.CharField(max_length=100, blank=True, null=True, verbose_name='Customer Name(Optional)')
-    processed_by = models.ForeignKey('clinic.Staff', verbose_name='Processed By')
-    lab_tests = models.ManyToManyField(LabTest, through='SaleTest', verbose_name='Lab Tests', blank=True, null=True)
-    drugs = models.ManyToManyField(Item, through='SaleItem', verbose_name='Drugs',blank=True, null=True)
-    total_amount = models.PositiveIntegerField(verbose_name='Bill')
-    full_pay = models.BooleanField(default=True, verbose_name='Full Payment', help_text='Please Uncheck if not full payment and enter customer name to keep track of debt')
-    #payment = models.PositiveIntegerField(blank=True, verbose_name='Amount Paid', help_text='Input amount paid if its not full payment')
-
-    def save(self, *args, **kwargs):
-
-        lab_total = 0
-
-        drug_total = 0
-
-        #Calculate total quantity and amounts in receipted items
-
-        for item in self.saletest_set.all():
-            lab_total += item.test.unit_cost
-
-        for item in self.drugs.all():
-
-            drug_total += item.drug_amount
-
-        self.total_amount = lab_total + drug_total
-
-        '''if self.full_pay:
-            self.payment = self.total_amount
-
-        else:
-            # we have a debtor entered into the system
-
-            debtor = Debtor.objects.create(customer=self.customer, bill=self.total_amount, paid=self.payment)
-
-            debtor.save()'''
-
-        super(Sale, self).save(*args, **kwargs)
-
-    def lab_test_names(self):
-        '''return names of lab tests for each sale '''
-
-        return ', '.join([a.type for a in self.lab_tests.all()])
-
-    def prescription_names(self):
-        """return prescriptions for a given sale"""
-
-        return ','.join([a.name for a in self.drugs.all()])
-
-    lab_test_names.short_description = 'Lab Tests'
-    prescription_names.short_description = 'Prescriptions'
-
-
-class SaleTest(models.Model):
-    test = models.ForeignKey(LabTest)
-    sale = models.ForeignKey(Sale)
-
-    class Meta:
-        verbose_name ='Lab Tests'
-        verbose_name_plural = 'Lab Tests Taken'
-
-
-class SaleItem(models.Model):
-    item = models.ForeignKey(Item)
-    sale = models.ForeignKey(Sale)
-    quantity = models.PositiveIntegerField(default=0, verbose_name="quantity")
-    drug_amount = models.PositiveIntegerField(blank=True, null=True)
-
-    class Meta:
-        verbose_name = 'prescription'
-        verbose_name_plural = 'Purchased Drug Items'
-
-    '''def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-
-        super(SaleItem, self).save(False, False, None,None)
-
-        #self.drug_amount = self.item.unit_cost * self.quantity
-
-        #update quantity field in Parent Model item
-
-        self.item.quantity -= self.quantity
-
-        self.item.save()
-
-        if self.pk:
-            self.drug_amount = self.item.unit_cost * self.quantity
-
-        self.sale.save()'''
-
-
-
-
-
-
-
-
-
 
 
 

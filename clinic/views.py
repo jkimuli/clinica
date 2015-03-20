@@ -7,7 +7,7 @@ from django.views.generic import ListView
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 
-from clinic.models import Patient, Staff, Visit
+from clinic.models import Patient, Employee, Visit
 
 
 def index(request):
@@ -21,10 +21,10 @@ class PatientListView(ListView):
     template_name = 'clinic/patient_list.html'
 
 
-class StaffListView(ListView):
-    model = Staff
-    context_object_name = "staff"
-    template_name = "clinic/staff_list.html"
+class EmployeeListView(ListView):
+    model = Employee
+    context_object_name = "employees"
+    template_name = "clinic/employee_list.html"
 
 
 class VisitListView(ListView):
@@ -38,9 +38,9 @@ class CreatePatientView(CreateView):
     template_name = 'clinic/patient_add.html'
 
 
-class CreateStaffView(CreateView):
-    model = Staff
-    template_name = 'clinic/staff_add.html'
+class CreateEmployeeView(CreateView):
+    model = Employee
+    template_name = 'clinic/employee_add.html'
 
 
 class CreateVisitView(CreateView):
@@ -53,17 +53,17 @@ class UpdatePatientView(UpdateView):
     template_name = 'clinic/patient_add.html'
 
 
-class UpdateStaffView(UpdateView):
-    model = Staff
-    template_name = 'clinic/staff_add.html'
+class UpdateEmployeeView(UpdateView):
+    model = Employee
+    template_name = 'clinic/employee_add.html'
 
 
 class UpdateVisitView(UpdateView):
     pass
 
 
-class DetailStaffView(DetailView):
-    model = Staff
+class DetailEmployeeView(DetailView):
+    model = Employee
 
 
 class DetailPatientView(DetailView):
@@ -79,9 +79,9 @@ class DeletePatientView(DeleteView):
     success_url = reverse_lazy('patient_list')
 
 
-class DeleteStaffView(DeleteView):
-    model = Staff
-    success_url = reverse_lazy('staff_list')
+class DeleteEmployeeView(DeleteView):
+    model = Employee
+    success_url = reverse_lazy('employee_list')
 
 
 class DeleteVisitView(DeleteView):
