@@ -17,8 +17,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('expense_date', models.DateField(auto_now_add=True, verbose_name=b'Date Expense Incurred')),
                 ('particulars', models.TextField(verbose_name=b'Particulars')),
-                ('amount', models.PositiveIntegerField(verbose_name=b'Amount')),
-                ('incurred_by', models.ForeignKey(to='clinic.Staff')),
+                ('amount', models.DecimalField(verbose_name=b'Amount', max_digits=12, decimal_places=2)),
+                ('incurred_by', models.ForeignKey(verbose_name=b'Employee Name', to='clinic.Employee')),
             ],
             options={
                 'verbose_name_plural': 'Expenses',

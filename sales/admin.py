@@ -18,10 +18,14 @@ class OrderItemInlineAdmin(admin.TabularInline):
     model = OrderItem
     extra = 1
 
+class DebtorInlineAdmin(admin.TabularInline):
+	model = Debtor
+	extra = 1
+
 
 class OrderAdmin(admin.ModelAdmin):
 
-    inlines = [OrderItemInlineAdmin]
+    inlines = [OrderItemInlineAdmin,DebtorInlineAdmin]
 
 
 admin.site.register(Item, ItemAdmin)

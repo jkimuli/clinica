@@ -13,8 +13,7 @@ PRODUCT_CATEGORIES = (
 
 class Order(models.Model):
     order_date = models.DateTimeField(auto_now_add=True)
-    processed_by = models.ForeignKey('clinic.Employee', verbose_name='Employee Name')
-
+    processed_by = models.ForeignKey('clinic.Employee', verbose_name='Processed By')
     total = models.DecimalField(default=0, verbose_name="Amount",decimal_places=2,max_digits=12,editable=False)
 
     '''def item_names(self):
@@ -43,7 +42,7 @@ class Order(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=100, verbose_name='Item Name')
-    unit_cost = models.DecimalField(default=0, verbose_name='Retail Price', decimal_places=2,max_digits=12)
+    unit_cost = models.DecimalField(default=0,verbose_name='Retail Price',decimal_places=2,max_digits=12)
     type = models.CharField(max_length=10, choices=PRODUCT_CATEGORIES, verbose_name='Item Category')
 
     def __unicode__(self):
@@ -91,10 +90,11 @@ class Supplier(models.Model):
 
 class Debtor(models.Model):
     debt_date = models.DateTimeField(auto_now_add=True, verbose_name='Date')
-    customer = models.CharField(max_length=100,verbose_name='customer')
-    bill = models.PositiveIntegerField(verbose_name='Bill')
-    paid = models.PositiveIntegerField(verbose_name='Amount Paid')
-    balance = models.PositiveIntegerField(verbose_name='Balance')
+    customer = models.CharField(max_length=100,verbose_name='Customer')
+    order = models.ForeignKey(Order,verbose_name='Order')
+    bill = models.DecimalField(verbose_name='Bill',max_digits=12,decimal_places=2)
+    paid = models.DecimalField(verbose_name='Amount Paid',max_digits=12,decimal_places=2)
+    balance = models.DecimalField(verbose_name='Balance',max_digits=12,decimal_places=2,editable=False)
 
     class Meta:
         verbose_name_plural = 'Debtors'
