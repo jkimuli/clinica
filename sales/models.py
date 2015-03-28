@@ -10,6 +10,13 @@ PRODUCT_CATEGORIES = (
     ('DRUG', 'PRESCRIPTION DRUG'),
 )
 
+PAYMENT_STATUS = (
+     ('F','Fully Paid'),
+     ('P', 'Partially Paid'),
+
+
+    )
+
 
 class Order(models.Model):
     order_date = models.DateTimeField(auto_now_add=True)
@@ -73,6 +80,61 @@ class OrderItem(models.Model):
         verbose_name_plural = 'Item Name'
 
 
+class Invoice(models.Model):
+    invoice_date = models.DateTimeField(auto_now_add=True)
+    processed_by = models.ForeignKey('clinic.Employee', verbose_name='Processed By')
+    customer = models.CharField(max_length=50,default="Cash Payee",blank=True,help_text='Enter Customer Name if partial Payment to keep track of debt')
+    total = models.DecimalField(default=0, verbose_name="Amount",decimal_places=2,max_digits=12,editable=False)
+    payment = models.DecimalField(verbose_name='Amount Paid',decimal_places=2,max_digits=12,blank=False)
+    payment_status = models.CharField(max_length=10,choices=PAYMENT_STATUS)
+
+    def item_names(self):
+        """return items for a given invoice"""
+
+        return ','.join([a.item.name for a in self.items.all()])
+
+    #Calculating total order amount from the subtotals from each order item
+
+    def total_amount(self):
+
+        amount = 0
+
+        for a in self.items.all():
+            amount += a.sub_total
+
+        self.total = amount
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+
+        if not self.pk:
+            self.total_amount()
+
+        return super(Invoice,self).save(force_insert=force_insert,force_update=force_update,using=using,update_fields=update_fields)
+
+    item_names.short_description = 'Invoice Items'
+
+
+class InvoiceItem(models.Model):
+    item = models.ForeignKey(Item, verbose_name='Item Name')
+    invoice = models.ForeignKey(Invoice,verbose_name= 'Order',related_name='items')
+    quantity = models.PositiveSmallIntegerField(default=1,verbose_name='Quantity')
+
+    @property
+    def sub_total(self):
+
+        return self.item.unit_cost * self.quantity
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
+    def get_absolute_url(self):
+        return reverse('item_detail', kwargs={'pk': self.pk})
+
+    class Meta:
+        verbose_name_plural = 'Item Name'
+
+
 class Supplier(models.Model):
     name = models.CharField(max_length=100, verbose_name='name')
     address = models.CharField(max_length=100, verbose_name='address')
@@ -94,7 +156,7 @@ class Supplier(models.Model):
 class Debtor(models.Model):
     debt_date = models.DateTimeField(auto_now_add=True, verbose_name='Date')
     customer = models.CharField(max_length=100,verbose_name='Customer')
-    order = models.ForeignKey(Order,verbose_name='Order')
+    order = models.ForeignKey(Invoice,verbose_name='Order')
     bill = models.DecimalField(verbose_name='Bill',max_digits=12,decimal_places=2,editable=False)
     paid = models.DecimalField(verbose_name='Amount Paid',max_digits=12,decimal_places=2)
     balance = models.DecimalField(verbose_name='Balance',max_digits=12,decimal_places=2,editable=False)

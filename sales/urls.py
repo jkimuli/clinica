@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^item/delete/(?P<pk>\d+)/$', login_required(views.ItemDeleteView.as_view()), name='item_delete'),
     url(r'^item/(?P<pk>\d+)/$', views.ItemDetailView.as_view(), name='item_detail'),
 
-    url(r'^orders/$',views.OrderListView.as_view(),name='order_list'),
+    url(r'^invoices/$',views.OrderListView.as_view(),name='order_list'),
     #url(r'^order/new/$', login_required(views.OrderCreateView.as_view()), name='order_new'),
     #url(r'^order/edit/(?P<pk>\d+)/$', login_required(views.OrderUpdateView.as_view()), name='order_edit'),
     #url(r'^order/delete/(?P<pk>\d+)/$', login_required(views.OrderDeleteView.as_view()), name='order_delete'),
