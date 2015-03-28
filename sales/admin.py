@@ -6,7 +6,8 @@ from .models import Item, Order, OrderItem, Supplier, Debtor
 
 class ItemAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'unit_cost',)
-    search_fields = ('name',)
+    search_fields = ('name', 'type')
+    #radio_fields = {'type':admin.HORIZONTAL}
 
 
 class SupplierAdmin(admin.ModelAdmin):
@@ -18,14 +19,34 @@ class OrderItemInlineAdmin(admin.TabularInline):
     model = OrderItem
     extra = 1
 
+
 class DebtorInlineAdmin(admin.TabularInline):
 	model = Debtor
-	extra = 1
+	max_num = 1
+	verbose_name = 'Add Debtor if not full payment'
 
 
 class OrderAdmin(admin.ModelAdmin):
+	inlines = [OrderItemInlineAdmin,]
+	date_hierarchy = 'order_date'
+	list_display = ('order_date','processed_by','total','item_names',)
 
-    inlines = [OrderItemInlineAdmin,DebtorInlineAdmin]
+	def save_related(self,request,form,formsets,change):
+		super(OrderAdmin,self).save_related(request,form,formsets,change)
+		order = form.instance
+		order.total = 0
+
+		for item in Order.objects.get(pk=order.id).items.all():
+			order.total += (item.quantity*item.item.unit_cost)
+
+		order.save()
+
+		
+
+
+	    
+
+
 
 
 admin.site.register(Item, ItemAdmin)

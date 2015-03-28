@@ -16,10 +16,10 @@ class Order(models.Model):
     processed_by = models.ForeignKey('clinic.Employee', verbose_name='Processed By')
     total = models.DecimalField(default=0, verbose_name="Amount",decimal_places=2,max_digits=12,editable=False)
 
-    '''def item_names(self):
+    def item_names(self):
         """return items for a given order"""
 
-        return ','.join([a.name for a in self.items.all()])
+        return ','.join([a.item.name for a in self.items.all()])
 
     #Calculating total order amount from the subtotals from each order item
 
@@ -30,14 +30,17 @@ class Order(models.Model):
         for a in self.items.all():
             amount += a.sub_total
 
-        return amount
+        self.total = amount
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
 
-        self.total = self.total_amount()
+        if not self.pk:
+            self.total_amount()
 
-    item_names.short_description = 'Order Items'''''
+        return super(Order,self).save(force_insert=force_insert,force_update=force_update,using=using,update_fields=update_fields)
+
+    item_names.short_description = 'Order Items'
 
 
 class Item(models.Model):
@@ -52,7 +55,7 @@ class Item(models.Model):
 
 class OrderItem(models.Model):
     item = models.ForeignKey(Item, verbose_name='Item Name')
-    order_id = models.ForeignKey(Order,verbose_name= 'Order')
+    order = models.ForeignKey(Order,verbose_name= 'Order',related_name='items')
     quantity = models.PositiveSmallIntegerField(default=1,verbose_name='Quantity')
 
     @property
@@ -92,12 +95,29 @@ class Debtor(models.Model):
     debt_date = models.DateTimeField(auto_now_add=True, verbose_name='Date')
     customer = models.CharField(max_length=100,verbose_name='Customer')
     order = models.ForeignKey(Order,verbose_name='Order')
-    bill = models.DecimalField(verbose_name='Bill',max_digits=12,decimal_places=2)
+    bill = models.DecimalField(verbose_name='Bill',max_digits=12,decimal_places=2,editable=False)
     paid = models.DecimalField(verbose_name='Amount Paid',max_digits=12,decimal_places=2)
     balance = models.DecimalField(verbose_name='Balance',max_digits=12,decimal_places=2,editable=False)
 
     class Meta:
         verbose_name_plural = 'Debtors'
+
+    def set_bill(self):
+
+        self.bill = self.order.total
+
+    def set_balance(self):
+
+        self.balance=self.bill-self.paid
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+
+        if not self.pk:
+            self.set_bill()
+            self.set_balance()
+
+        return super(Debtor,self).save(force_insert=force_insert,force_update=force_update,using=using,update_fields=update_fields)
 
 
 

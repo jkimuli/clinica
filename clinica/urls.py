@@ -18,6 +18,6 @@ urlpatterns = patterns('',
     url(r'^sales/',include('sales.urls')),
     url(r'^expenses/',include('expenditure.urls')),
     url(r'^assets/',include('assets.urls')),
-    url(r'^grappelli',include('grappelli.urls')),
+    #url(r'^grappelli',include('grappelli.urls')),
 
 )
