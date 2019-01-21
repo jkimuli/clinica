@@ -2,7 +2,7 @@
 
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView,DetailView
 
-from .models import Item,Supplier,Debtor,Order
+from .models import Product,Supplier,Order
 
 
 class SupplierListView(ListView):
@@ -29,28 +29,28 @@ class SupplierUpdateView(UpdateView):
     template_name = 'sales/supplier_add.html'
 
 
-class ItemListView(ListView):
-    model = Item
-    template_name = 'sales/item_list.html'
-    context_object_name = 'items'
+class ProductListView(ListView):
+    model = Product
+    template_name = 'sales/product_list.html'
+    context_object_name = 'products'
 
 
-class ItemDetailView(DetailView):
+class ProductDetailView(DetailView):
     pass
 
 
-class ItemDeleteView(DeleteView):
+class ProductDeleteView(DeleteView):
     pass
 
 
-class ItemCreateView(CreateView):
-    model = Item
-    template_name = 'sales/item_add.html'
+class ProductCreateView(CreateView):
+    model = Product
+    template_name = 'sales/product_add.html'
 
 
-class ItemUpdateView(UpdateView):
-    model = Item
-    template_name = 'sales/item_add.html'
+class ProductUpdateView(UpdateView):
+    model = Product
+    template_name = 'sales/product_add.html'
 
 
 class OrderListView(ListView):

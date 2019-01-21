@@ -1,185 +1,140 @@
 from django.db import models
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 # Create your models here.
 
-PRODUCT_CATEGORIES = (
+class Category(models.Model):
+    name = models.CharField(max_length=100)
 
-    ('FEE', 'CLINICAL FEES'),
-    ('TEST', 'LAB_TESTS'),
-    ('DRUG', 'PRESCRIPTION DRUG'),
-)
+    class Meta:
+        verbose_name = 'product_category'
+        verbose_name_plural = 'Product Categories'
 
-PAYMENT_STATUS = (
-     ('F','Fully Paid'),
-     ('P', 'Partially Paid'),
+    def __str__(self):
+        return self.name
 
-
-    )
-
-
-class Order(models.Model):
-    order_date = models.DateTimeField(auto_now_add=True)
-    processed_by = models.ForeignKey('clinic.Employee', verbose_name='Processed By')
-    total = models.DecimalField(default=0, verbose_name="Amount",decimal_places=2,max_digits=12,editable=False)
-
-    def item_names(self):
-        """return items for a given order"""
-
-        return ','.join([a.item.name for a in self.items.all()])
-
-    #Calculating total order amount from the subtotals from each order item
-
-    def total_amount(self):
-
-        amount = 0
-
-        for a in self.items.all():
-            amount += a.sub_total
-
-        self.total = amount
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-
-        if not self.pk:
-            self.total_amount()
-
-        return super(Order,self).save(force_insert=force_insert,force_update=force_update,using=using,update_fields=update_fields)
-
-    item_names.short_description = 'Order Items'
-
-
-class Item(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Item Name')
+class Product(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Product Name')
     unit_cost = models.DecimalField(default=0,verbose_name='Retail Price',decimal_places=2,max_digits=12)
-    type = models.CharField(max_length=10, choices=PRODUCT_CATEGORIES, verbose_name='Item Category')
+    description = models.TextField(blank=True,help_text="Product Description")
+    type = models.ForeignKey(Category,on_delete=models.CASCADE,related_name='products',verbose_name='Product Category')
+    stock = models.PositiveIntegerField(default=0,blank=True,verbose_name="Available Stock")
 
-    def __unicode__(self):
+    def __str__(self):
 
-        return u'%s' % self.name
-
-
-class OrderItem(models.Model):
-    item = models.ForeignKey(Item, verbose_name='Item Name')
-    order = models.ForeignKey(Order,verbose_name= 'Order',related_name='items')
-    quantity = models.PositiveSmallIntegerField(default=1,verbose_name='Quantity')
-
-    @property
-    def sub_total(self):
-
-        return self.item.unit_cost * self.quantity
-
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('item_detail', kwargs={'pk': self.pk})
-
-    class Meta:
-        verbose_name_plural = 'Item Name'
-
-
-class Invoice(models.Model):
-    invoice_date = models.DateTimeField(auto_now_add=True)
-    processed_by = models.ForeignKey('clinic.Employee', verbose_name='Processed By')
-    customer = models.CharField(max_length=50,default="Cash Payee",blank=True,help_text='Enter Customer Name if partial Payment to keep track of debt')
-    total = models.DecimalField(default=0, verbose_name="Amount",decimal_places=2,max_digits=12,editable=False)
-    payment = models.DecimalField(verbose_name='Amount Paid',decimal_places=2,max_digits=12,blank=False)
-    payment_status = models.CharField(max_length=10,choices=PAYMENT_STATUS)
-
-    def item_names(self):
-        """return items for a given invoice"""
-
-        return ','.join([a.item.name for a in self.items.all()])
-
-    #Calculating total order amount from the subtotals from each order item
-
-    def total_amount(self):
-
-        amount = 0
-
-        for a in self.items.all():
-            amount += a.sub_total
-
-        self.total = amount
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-
-        if not self.pk:
-            self.total_amount()
-
-        return super(Invoice,self).save(force_insert=force_insert,force_update=force_update,using=using,update_fields=update_fields)
-
-    item_names.short_description = 'Invoice Items'
-
-
-class InvoiceItem(models.Model):
-    item = models.ForeignKey(Item, verbose_name='Item Name')
-    invoice = models.ForeignKey(Invoice,verbose_name= 'Order',related_name='items')
-    quantity = models.PositiveSmallIntegerField(default=1,verbose_name='Quantity')
-
-    @property
-    def sub_total(self):
-
-        return self.item.unit_cost * self.quantity
-
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('item_detail', kwargs={'pk': self.pk})
-
-    class Meta:
-        verbose_name_plural = 'Item Name'
-
+        return self.name
 
 class Supplier(models.Model):
     name = models.CharField(max_length=100, verbose_name='name')
     address = models.CharField(max_length=100, verbose_name='address')
     phone = models.CharField(max_length=30, verbose_name='Phone Number')
-    alternate_phone = models.CharField(max_length=30, verbose_name='Alternate Phone Number', blank=True)
-    email = models.EmailField(max_length=100, verbose_name='Email', blank=True)
+    alternate_phone = models.CharField(max_length=30, verbose_name='Alternate Phone Number', blank=True,null=True)
+    email = models.EmailField(max_length=100, verbose_name='Email', blank=True,null=True)
 
-    def __unicode__(self):
-        return u'%s' % self.name
+    def __str__(self):
+        return "{}".format(self.name)
 
     def get_absolute_url(self):
-        return reverse('supplier_detail', kwargs={'pk': self.pk})
+        return reverse('supplier_detail', args=[self.pk])
 
     class Meta:
         verbose_name_plural = 'Suppliers'
         ordering = ['name']
 
+class Order(models.Model):
 
-class Debtor(models.Model):
-    debt_date = models.DateTimeField(auto_now_add=True, verbose_name='Date')
-    customer = models.CharField(max_length=100,verbose_name='Customer')
-    order = models.ForeignKey(Invoice,verbose_name='Order')
-    bill = models.DecimalField(verbose_name='Bill',max_digits=12,decimal_places=2,editable=False)
-    paid = models.DecimalField(verbose_name='Amount Paid',max_digits=12,decimal_places=2)
-    balance = models.DecimalField(verbose_name='Balance',max_digits=12,decimal_places=2,editable=False)
+    FULLY_PAID = 0
+    PARTIAL_PAID = 1
+    NOT_PAID = 2
+
+    ORDER_STATUS = (
+     (FULLY_PAID,'Fully Paid'),
+     (PARTIAL_PAID, 'Partially Paid'),
+     (NOT_PAID, 'Not Paid'),
+    )
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    employee = models.ForeignKey('clinic.Employee',on_delete=models.SET_DEFAULT,default="Clinic Attendant",verbose_name='Processed By')
+    paid = models.PositiveSmallIntegerField(choices=ORDER_STATUS,editable=False,default=NOT_PAID)
+    customer = models.CharField(max_length=100,default='Cash Payment',help_text="Enter Customer name to keep track of debtors")
+    order_amount = models.DecimalField(verbose_name='Amount Paid',max_digits=12,decimal_places=2)
+
+    def total_cost(self):
+        return sum(item.sub_total() for item in self.items.all())
+
+    def save(self,*args,**kwargs):
+        
+        super(Order,self).save(*args,**kwargs)  
+
+        if self.pk:
+            #set the paid status based on the order_amount and the total cost of the order 
+            if self.order_amount == self.total_cost():
+                # order is fully paid
+                self.paid = Order.FULLY_PAID
+            elif self.order_amount == 0:
+                self.paid = Order.NOT_PAID
+            else:
+                self.paid = Order.PARTIAL_PAID
+
+            super(Order,self).save(*args,**kwargs)    
+
+        # Create a new Debtor in the database depending on the value of self.paid
+
+        if (self.paid==Order.NOT_PAID) or (self.paid==Order.PARTIAL_PAID):
+            amount = self.total_cost() - self.order_amount
+            debtor = Debtor()
+            debtor.debt_amount = amount
+            debtor.order = self
+            debtor.save()       
+        
+
+class OrderItem(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='order_items',verbose_name='Product Name')
+    order = models.ForeignKey(Order,on_delete=models.CASCADE,verbose_name= 'Order',related_name='items')
+    quantity = models.PositiveSmallIntegerField(default=1,verbose_name='Quantity',help_text='Quantity sold')
+
+    def sub_total(self):
+        return self.product.unit_cost * self.quantity
+
+    def __str__(self):
+        return '{}'.format(self.pk)
+
+    def get_absolute_url(self):
+        return reverse('order_item_detail', args=[self.pk])
 
     class Meta:
-        verbose_name_plural = 'Debtors'
+        verbose_name_plural = 'Order Item Particulars'
 
-    def set_bill(self):
+class Purchase(models.Model):
+    created = models.DateField(auto_now_add=True,verbose_name="Date Purchased")
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Supplier,on_delete=models.SET_DEFAULT,default='Unknown Supplier')
+    quantity = models.PositiveIntegerField(default=1,verbose_name='Quantity Purchased')
 
-        self.bill = self.order.total
+    def __str__(self):
 
-    def set_balance(self):
+        return "{} - Quantity {} purchased on {}".format(self.product,self.quantity,self.created)
 
-        self.balance=self.bill-self.paid
+class Debtor(models.Model):
+    created = models.DateField(auto_now_add=True,verbose_name="Date")
+    order = models.ForeignKey(Order,on_delete=models.CASCADE)
+    clear_debt = models.BooleanField(default=False)
+    debt_amount = models.DecimalField(max_digits=12,decimal_places=2,verbose_name="Debt Amount",editable=False)
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
+    class Meta:
+        verbose_name_plural = "Debtors"    
 
-        if not self.pk:
-            self.set_bill()
-            self.set_balance()
+    @property
+    def debt_status(self):
+        if not self.clear_debt:
+            return "Debt Outstanding"
 
-        return super(Debtor,self).save(force_insert=force_insert,force_update=force_update,using=using,update_fields=update_fields)
+    def save(self,*args,**kwargs):
+        super(Debtor,self).save(*args,**kwargs)
 
-
-
+        if self.pk and self.clear_debt:
+            # if clear_debt is set to True , remove the specific object from the list of debtors
+            debtor = Debtor.objects.filter(pk=self.pk)
+            debtor.delete()
+                

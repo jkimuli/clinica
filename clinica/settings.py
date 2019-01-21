@@ -22,32 +22,16 @@ SECRET_KEY = '@yg04uyz#s5x@(^&vv45)$tc7!p!bo(b6z-@p76j2$d2einipu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-STATIC_PATH = os.path.join(BASE_DIR,'static')
-
-TEMPLATE_PATH = os.path.join(BASE_DIR,'templates')
-
-
-STATICFILES_DIRS = (STATIC_PATH,
-
-)
-
 LOGIN_REDIRECT_URL = '/clinic/'
-
-
-TEMPLATE_DIRS = (
-
-    TEMPLATE_PATH,
-)
-
 
 # Application definition
 
 INSTALLED_APPS = (
-    #'grappelli',
+    'material.theme.lightgreen',
+    'material',
     'suit',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -55,22 +39,60 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'clinic',
-    'sales',
-    'expenditure',
-    'assets',
-    #'widget_tweaks',
+
+    'clinic.apps.ClinicConfig',
+    'sales.apps.SalesConfig',
+    'expenditure.apps.ExpenditureConfig',
+    'assets.apps.AssetConfig',
+  
+   
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.template.context_processors.media',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+# Password validation
+# https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
 
 ROOT_URLCONF = 'clinica.urls'
 
@@ -101,24 +123,31 @@ USE_L10N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = 'clinic.Employee'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
 
-TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',
+STATIC_PATH = os.path.join(BASE_DIR,'static')
 
-    'django.core.context_processors.request',
+STATICFILES_DIRS=[
+    STATIC_PATH,
+]
 
-
-    )
-
+# Django Suit configuration 
 SUIT_CONFIG = {
+    # header
 
-    'ADMIN_NAME' : "St Mary's Clinic Wakiso",
-    'SHOW_REQUIRED_ASTERISK': True,
-    'CONFIRM_UNSAVED_CHANGES': True,
+    'ADMIN_NAME': 'My Clinic Administration',
+
+    'SEARCH_URL':'',
+    
+    'MENU_EXCLUDE': ('auth',),
+    
+    # misc
+
     'LIST_PER_PAGE': 20
+}
 
-    }

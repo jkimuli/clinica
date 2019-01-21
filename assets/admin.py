@@ -5,7 +5,7 @@ from .models import Asset
 
 
 class FixedAssetAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'acquired_on', 'service_period', 'last_service_date', 'service_due')
+    list_display = ('name', 'category', 'acquired_on','functional_status','service_interval', 'last_service_date','service_status',)
     list_filter = ('category',)
 
 

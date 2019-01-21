@@ -1,20 +1,15 @@
 __author__ = 'julius'
 
-from django.conf.urls import patterns,url
-from django.contrib.auth.decorators import login_required
-
+from django.urls import path
 from . import views
 
-urlpatterns = patterns(' ',
+app_name = 'expenses'
 
-      url(r'^$',views.ExpenseListView.as_view(),name='expense_list'),
-      url(r'^(?P<pk>\d+)/$',views.ExpenseDetailView.as_view(),name='expense_detail'),
+urlpatterns = [
+      path('',views.ExpenseListView.as_view(),name='expense_list'),
+      path('<int:pk>',views.ExpenseDetailView.as_view(),name='expense_detail'),
+      path('edit/<int:pk>',views.ExpenseUpdateView.as_view(),name='expense_edit'),
+      path('delete/<int:pk>',views.ExpenseDeleteView.as_view(),name='expense_delete'),
+      path('add',views.ExpenseCreateView.as_view(),name='expense_create'),
 
-      url(r'^edit/(?P<pk>\d+)/$',login_required(views.ExpenseUpdateView.as_view()),name='expense_edit'),
-      url(r'^delete/(?P<pk>\d+)/$',login_required(views.ExpenseDeleteView.as_view()),name='expense_delete'),
-
-      url(r'^add/$',login_required(views.ExpenseCreateView.as_view()),name='expense_create'),
-
-
-
-    )
+]

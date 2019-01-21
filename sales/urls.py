@@ -1,29 +1,27 @@
 __author__ = 'julius'
 
-from django.conf.urls import patterns, url
-from django.contrib.auth.decorators import login_required
+from django.urls import path
 from . import views
 
-urlpatterns = patterns('',
+urlpatterns = [
+
+    path('suppliers', views.SupplierListView.as_view(), name='supplier_list'),
+    path('supplier/new', views.SupplierCreateView.as_view(), name='supplier_new'),
+    path('supplier/edit/<int:pk>', views.SupplierUpdateView.as_view(), name='supplier_edit'),
+    path('supplier/delete/<int:pk>', views.SupplierDeleteView.as_view(), name='supplier_delete'),
+    path('supplier/<int:pk>', views.SupplierDetailView.as_view(), name='supplier_detail'),
+
+    path('products',views.ProductListView.as_view(),name='product_list'),
+    path('product/new', views.ProductCreateView.as_view(), name='product_new'),
+    path('product/edit/<int:pk>', views.ProductUpdateView.as_view(), name='product_edit'),
+    path('product/delete/<int:pk>', views.ProductDeleteView.as_view(), name='product_delete'),
+    path('product/<int:pk>', views.ProductDetailView.as_view(), name='product_detail'),
+
+    path('invoices',views.OrderListView.as_view(),name='order_list'),
+    #path('order/new', views.OrderCreateView.as_view(), name='order_new'),
+    #path('order/edit/<int:pk>', views.OrderUpdateView.as_view(), name='order_edit'),
+    #path('order/delete/<int:pk>', views.OrderDeleteView.as_view(), name='order_delete'),
+    #path('order/<int:pk>', views.OrderDetailView.as_view(), name='order_detail'),
 
 
-    url(r'^suppliers/$', views.SupplierListView.as_view(), name='supplier_list'),
-    url(r'^supplier/new/$', login_required(views.SupplierCreateView.as_view()), name='supplier_new'),
-    url(r'^supplier/edit/(?P<pk>\d+)/$', login_required(views.SupplierUpdateView.as_view()), name='supplier_edit'),
-    url(r'^supplier/delete/(?P<pk>\d+)/$', login_required(views.SupplierDeleteView.as_view()), name='supplier_delete'),
-    url(r'^supplier/(?P<pk>\d+)/$', views.SupplierDetailView.as_view(), name='supplier_detail'),
-
-    url(r'^items/$',views.ItemListView.as_view(),name='item_list'),
-    url(r'^item/new/$', login_required(views.ItemCreateView.as_view()), name='item_new'),
-    url(r'^item/edit/(?P<pk>\d+)/$', login_required(views.ItemUpdateView.as_view()), name='item_edit'),
-    url(r'^item/delete/(?P<pk>\d+)/$', login_required(views.ItemDeleteView.as_view()), name='item_delete'),
-    url(r'^item/(?P<pk>\d+)/$', views.ItemDetailView.as_view(), name='item_detail'),
-
-    url(r'^invoices/$',views.OrderListView.as_view(),name='order_list'),
-    #url(r'^order/new/$', login_required(views.OrderCreateView.as_view()), name='order_new'),
-    #url(r'^order/edit/(?P<pk>\d+)/$', login_required(views.OrderUpdateView.as_view()), name='order_edit'),
-    #url(r'^order/delete/(?P<pk>\d+)/$', login_required(views.OrderDeleteView.as_view()), name='order_delete'),
-    #url(r'^order/(?P<pk>\d+)/$', views.OrderDetailView.as_view(), name='order_detail'),
-
-
-)
+]
