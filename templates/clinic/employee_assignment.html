@@ -1,14 +1,14 @@
 {%extends 'base.html'%}
 
-        {%block page_title%}
+    {%block page_title%}
 
-         Clinic Records
+        Clinic Records
 
-        {%endblock%}
+    {%endblock%}
 
-        {%block main_content%}
+    {%block main_content%}
 
-        {% if visits%}
+    {% if employee%}
 
         <table class="table striped ">
 
@@ -19,10 +19,7 @@
                   <th> Patient</th>
                   <th> Category</th>
                   <th> Diagnosis</th>
-                  <th> Attendant</th>
-                  <th></th>
-                  <th></th>
-                  <th></th>
+                     
                   
               </tr>
 
@@ -30,19 +27,14 @@
 
             <tbody>
 
-            {%for visit in visits%}
+            {%for visit in employee.visits_handled.all%}
 
             <tr class="grey-text">
                 <td>{{visit.visit_date}}</td>
                 <td>{{visit.patient}}</td>
                 <td>{{visit.get_category_display}}</td>
                 <td>{{visit.diagnosis}}</td>
-                <td>{{visit.attendant}}</td>
-                <td><a href="{%url 'clinic:visit_detail' visit.id%}">Details</a></td>
-                <td><a href="{%url 'clinic:visit_edit' visit.id%}">Edit</a></td>
-                <td><a href="{%url 'clinic:visit_delete' visit.id%}">Delete</a></td>
-
-
+                                
             </tr>
 
             {%endfor%}
@@ -55,9 +47,8 @@
 
         {%else%}
 
-        <p> No visits added to database yet!</p>
+        <p> Employee has not yet handled any assignments!</p>
 
         {%endif%}
 
         {%endblock%}
-

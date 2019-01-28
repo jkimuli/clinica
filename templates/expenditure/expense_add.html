@@ -1,69 +1,48 @@
-{%extends 'expenditure/base.html'%}
-{%load widget_tweaks%}
+{%extends 'base_form.html'%}
+{%block page_title%}
+   Add New Expense
+{%endblock%}
 
+{%block form_content%}
 
-    {%block title_heading%}
+  {%if form%}
+  
+     <div class="card">
+        <div class="card-content grey-text">
+          <span class="card-title center">Create New Expense</span>
+        </br>
 
-        Add Expense
-
-     {%endblock%}
-
-    {%block content%}
-
-        <div class="container-fluid">
-
-            <div class="row">
-
-                <div class="col-sm-5">
-
-                     <form action="{%url 'expense_create' %}" method="POST" role="form" class="'form-horizontal">
-
-
-            {%csrf_token%}
-
-           <div class="form-group">
-               {{form.particulars.errors}}
-               <label class="control-label">Particulars:</label>
-
-                   {{form.particulars|add_class:'form-control'}}
-           </div>
-
-           <div class="form-group">
-               {{form.amount.errors}}
-               <label class="control-label">Amount:</label>
-
-                   {{form.amount|add_class:'form-control'}}
-
-           </div>
-
-           <div class="form-group">
-               {{form.incurred_by.errors}}
-               <label class="control-label">Incurred By:</label>
-
-                   {{form.incurred_by|add_class:'form-control'}}
-
-           </div>
-
-
-
-           <div class="form-group">
-
-
-                   <button type="submit" class="btn btn-primary">Save Changes</button>
-
-
-
-           </div>
-    </form>
-
-                </div>
-
-                <div class="col-sm-7">
-
-                </div>
-            </div>
+          <form method="POST">
+              {% csrf_token %}
+              {{form.as_p}}
+              <br/>
+              <button type="submit" name="_submit" class="btn teal lighten-3">Submit</button>
+          </form>
+          
         </div>
+        
+      </div> 
+
+      
+ 
+  {%endif%}
+
+{%endblock%} 
+
+{%block jquery_code%}
+
+<script type="text/javascript">
+
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    
+    var instances = M.FormSelect.init(elems);
+  }); 
+
+</script>
+
+  {%endblock%}
 
 
 
-   {%endblock%}
+

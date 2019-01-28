@@ -109,7 +109,7 @@ class OrderItem(models.Model):
 class Purchase(models.Model):
     created = models.DateField(auto_now_add=True,verbose_name="Date Purchased")
     product = models.ForeignKey(Product,on_delete=models.CASCADE)
-    supplier = models.ForeignKey(Supplier,on_delete=models.SET_DEFAULT,default='Unknown Supplier')
+    supplier = models.ForeignKey(Supplier,on_delete=models.SET_DEFAULT,default='Unknown Supplier',related_name='items_supplied')
     quantity = models.PositiveIntegerField(default=1,verbose_name='Quantity Purchased')
 
     def __str__(self):
@@ -128,7 +128,7 @@ class Debtor(models.Model):
     @property
     def debt_status(self):
         if not self.clear_debt:
-            return "Debt Outstanding"
+              return "Debt Outstanding"
 
     def save(self,*args,**kwargs):
         super(Debtor,self).save(*args,**kwargs)

@@ -1,20 +1,20 @@
-{%extends 'clinic/base.html'%}
+{%extends 'base.html'%}
 
-        {%block title_heading%}
+        {%block page_title%}
 
          Patients
 
         {%endblock%}
 
-        {%block content%}
+        {%block main_content%}
 
         {% if patients%}
 
-        <table class="table table-bordered">
+        <table class="table bordered striped">
 
             <thead>
 
-              <tr>
+              <tr class="teal lighten-3 white-text">
                   <th> First Name</th>
                   <th> Last Name</th>
                   <th> Gender</th>
@@ -22,6 +22,9 @@
                   <th> Phone</th>
                   <th> Date of Birth</th>
                   <th> Age </th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
 
               </tr>
 
@@ -31,7 +34,7 @@
 
             {%for patient in patients%}
 
-            <tr>
+            <tr class="grey-text">
                 <td>{{patient.first_name}}</td>
                 <td>{{patient.last_name}}</td>
                 <td>{{patient.gender}}</td>
@@ -39,9 +42,10 @@
                 <td>{{patient.phone}}</td>
                 <td>{{patient.dob}}</td>
                 <td>{{patient.age}}</td>
-                <td><a href="/clinic/patient/edit/{{patient.id}}">Edit</a></td>
-                <td><a href="/clinic/patient/delete/{{patient.id}}">Delete</a></td>
 
+                <td><a href="{%url 'clinic:patient_history' patient.pk%}">Show</a></td>
+                <td><a href="{%url 'clinic:patient_edit' patient.pk%}">Edit</a></td>
+                <td><a href="{%url 'clinic:patient_delete' patient.pk%}">Delete</a></td>
 
             </tr>
 

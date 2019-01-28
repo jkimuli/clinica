@@ -22,16 +22,18 @@ SECRET_KEY = '@yg04uyz#s5x@(^&vv45)$tc7!p!bo(b6z-@p76j2$d2einipu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
 ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = '/clinic/'
 
+LOGOUT_REDIRECT_URL = '/clinic/'
+
 # Application definition
 
 INSTALLED_APPS = (
-    'material.theme.lightgreen',
+   # 'material.theme.purple',
     'material',
+    'crispy_forms',
     'suit',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -97,7 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ROOT_URLCONF = 'clinica.urls'
 
 WSGI_APPLICATION = 'clinica.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases

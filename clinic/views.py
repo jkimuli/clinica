@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 
 from clinic.models import Patient, Employee, Visit
+from clinic.forms import EmployeeUserCreationForm,EmployeeUserChangeForm,PatientForm
 
 
 def index(request):
@@ -35,11 +36,15 @@ class VisitListView(LoginRequiredMixin,ListView):
 class CreatePatientView(LoginRequiredMixin,CreateView):
     model = Patient
     template_name = 'clinic/patient_add.html'
+    form_class = PatientForm
+    success_url = reverse_lazy('clinic:patient_list')
 
 
 class CreateEmployeeView(UserPassesTestMixin,CreateView):
     model = Employee
+    form_class= EmployeeUserCreationForm
     template_name = 'clinic/employee_add.html'
+    success_url = reverse_lazy('clinic:visit_list')
 
     def test_func(self):
         return self.request.user.is_superuser
@@ -48,15 +53,18 @@ class CreateEmployeeView(UserPassesTestMixin,CreateView):
 class CreateVisitView(LoginRequiredMixin,CreateView):
     model = Visit
     template_name = 'clinic/visit_add.html'
+    fields = '__all__'
 
 
 class UpdatePatientView(LoginRequiredMixin,UpdateView):
     model = Patient
     template_name = 'clinic/patient_add.html'
+    fields = '__all__'
 
 
 class UpdateEmployeeView(UserPassesTestMixin,UpdateView):
     model = Employee
+    form_class=EmployeeUserChangeForm
     template_name = 'clinic/employee_add.html'
 
     def test_func(self):
@@ -69,11 +77,14 @@ class UpdateVisitView(LoginRequiredMixin,UpdateView):
 
 class DetailEmployeeView(LoginRequiredMixin,DetailView):
     model = Employee
+    template_name = 'clinic/employee_detail.html'
+    context_object_name = 'employee'
 
 
-class DetailPatientView(LoginRequiredMixin,DetailView):
+class PatientHistoryView(LoginRequiredMixin,DetailView):
     model = Patient
-
+    template_name = 'clinic/patient_detail.html'
+    context_object_name = 'patient'
 
 class DetailVisitView(LoginRequiredMixin,DetailView):
     model = Visit
@@ -95,6 +106,17 @@ class DeleteEmployeeView(UserPassesTestMixin,DeleteView):
 class DeleteVisitView(LoginRequiredMixin,DeleteView):
     model = Visit
     success_url = reverse_lazy('visit_list')
+
+class EmployeeAssignmentDetails(LoginRequiredMixin,DetailView):
+    model = Employee
+    template_name = 'clinic/employee_assignment.html'
+    context_object_name = 'employee'
+
+class EmployeeExpenseDetails(LoginRequiredMixin,DetailView):
+    model = Employee
+    template_name = 'clinic/employee_expense.html'
+    context_object_name = 'employee'
+
 
 
 

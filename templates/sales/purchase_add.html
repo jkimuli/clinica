@@ -1,43 +1,44 @@
 {%extends 'base_form.html'%}
-
 {%block page_title%}
-   Add New Medical Record
+   Add New Purchase
 {%endblock%}
 
 {%block form_content%}
 
   {%if form%}
   
-    <div class="card">
+     <div class="card">
         <div class="card-content grey-text">
-          <span class="card-title center">Create New Medical Record</span>
+          <span class="card-title center">Create New Purchase </span>
         </br>
 
           <form method="POST">
               {% csrf_token %}
-              {{form.as_p}} <br/>
-              <button type="submit" name="_submit" class="btn teal">Submit</button>
+              {{form.as_p}}
+              <br/>
+              <button type="submit" name="_submit" class="btn teal lighten-3">Submit</button>
           </form>
           
         </div>
-       
         
-      </div>
+      </div> 
+
+      
  
   {%endif%}
 
-{%endblock%}  
+{%endblock%} 
 
 {%block jquery_code%}
 
 <script type="text/javascript">
+
 document.addEventListener('DOMContentLoaded', function() {
     var elems = document.querySelectorAll('select');
+    
     var instances = M.FormSelect.init(elems);
-  });
+  }); 
 
-</script>  
+</script>
 
-
-{%endblock%}
-
+  {%endblock%}

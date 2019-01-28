@@ -1,6 +1,7 @@
 # Create your views here.
 
 from django.views.generic import CreateView,DetailView,DeleteView,ListView,UpdateView
+from django.urls import reverse_lazy
 from .models import Expense
 from django.contrib.auth.mixins import UserPassesTestMixin,LoginRequiredMixin
 
@@ -8,6 +9,7 @@ class ExpenseCreateView(UserPassesTestMixin,CreateView):
     fields = ('particulars','amount','incurred_by')
     model = Expense
     template_name = 'expenditure/expense_add.html'
+    success_url = reverse_lazy('expenditure:expense_list')
 
     def test_func(self):
         return self.request.user.is_superuser

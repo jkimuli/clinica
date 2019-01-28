@@ -1,0 +1,54 @@
+{%extends 'base.html'%}
+
+        {%block page_title%}
+
+        Drugs and Lab Test Inventory
+
+        {%endblock%}
+
+
+      {%block main_content%}
+
+        {%if products%}
+
+        <table class="striped bordered">
+
+            <thead class="teal lighten-3 white-text">
+             
+                  <th> Name</th>
+                  <th> Retail Price</th>
+                  <th> Type</th>
+                  <th></th>
+                  <th></th>
+         
+            </thead>
+
+            <tbody>
+
+            {%for product in products%}
+
+            <tr class="grey-text">
+                <td>{{product.name}}</td>
+                <td>{{product.unit_cost}}</td>
+                <td>{{product.type}}</td>
+                <td><a href="{%url 'sales:product_edit' product.id%}">Edit</a></td>
+                <td><a href="{%url 'sales:product_delete' product.id%}">Delete</a></td>
+
+
+            </tr>
+
+            {%endfor%}
+
+            </tbody>
+
+        </table>
+
+
+
+        {%else%}
+
+        <p> No inventory added yet!</p>
+
+        {%endif%}
+
+        {%endblock%}

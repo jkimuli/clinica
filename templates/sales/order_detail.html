@@ -1,0 +1,36 @@
+{%extends 'base.html'%}
+
+{%block page_title%}
+
+   Order Details
+
+{%endblock%}
+
+{%block main_content%}
+
+{%if order%}
+
+<h5> Details for this Order Instance</h5>
+
+<p> {{order.created}}</p>
+<p> {{order.customer}}</p>
+<p> {{order.employee}}</p>
+<p> {{order.total_cost}}</p>
+<p> {{order.order_amount}}</p>
+<p> {{order.paid}}</p>
+
+</br></br>
+<h6> Line Items:</h6>
+
+<ul>
+    {%for item in order.items.all %}
+    <li>{{item.product}},{{item.quantity}},{{item.sub_total}}</li>
+    {%endfor%}
+</ul>
+
+{%else%}
+  <p> No detailed information avaialable for this particular order instance</p>
+
+{%endif%}
+
+{%endblock%}

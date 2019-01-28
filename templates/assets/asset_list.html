@@ -1,0 +1,53 @@
+{%extends 'base.html'%}
+
+{%block page_title%}
+
+   Asset List
+
+{%endblock%}
+
+{%block main_content%}
+
+{%if assets%}
+
+   <table class="bordered">
+
+    <thead class="teal lighten-3 white-text">
+        <th>Name</th>            
+        <th>Category</th>
+        <th>Registration Date</th>
+        <th>Functional Status</th>
+        <th>Service Interval</th>
+        <th>Last Service Date</th>
+        <th>Service Status</th>    
+    </thead>
+
+    {%for asset in assets%}
+      <tr class="grey-text">
+          <td>{{asset.name}}</td>
+          <td>{{asset.get_category_display}}</td>
+          <td>{{asset.acquired_on}}</td>
+          <td>{{asset.get_functional_status_display}}</td>
+          <td>{{asset.service_interval}}</td>
+          <td>{{asset.last_service_date}}</td>
+          <td>{{asset.service_status}}</td> 
+          <td>
+              <a href="{%url 'assets:asset_edit' asset.pk%}">Edit</a>
+          </td> 
+
+          <td>
+                <a href="{%url 'assets:asset_delete' asset.pk%}">Delete</a>
+            </td> 
+      </tr>
+
+     {%endfor%} 
+
+   </table>
+
+   {%else%}
+     <p> No asets created</p>
+
+   {%endif%}  
+
+{%endblock%}     
+

@@ -25,12 +25,6 @@ class AssetDetailView(LoginRequiredMixin,DetailView):
 class AssetUpdateView(UserPassesTestMixin,UpdateView):
     pass  
 
-class AssetListView(UserPassesTestMixin,CreateView):
-    def test_func(self):
-        return self.request.user.is_superuser
-
-class AssetDeleteView(UserPassesTestMixin,DeleteView):
-    def test_func(self):
-        return self.request.user.is_superuser          
+       
 
 

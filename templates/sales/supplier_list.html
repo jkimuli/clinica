@@ -1,19 +1,19 @@
-{%extends 'expenditure/base.html'%}
+{%extends 'base.html'%}
 
-        {%block title_heading%}
+        {%block page_title%}
 
         Medical Suppliers
 
         {%endblock%}
 
 
-      {%block content%}
+      {%block main_content%}
 
         {%if suppliers%}
 
-        <table class="table table-bordered">
+        <table class="striped bordered">
 
-            <thead>
+            <thead class="teal lighten-3 white-text">
 
               <tr>
                   <th> Name</th>
@@ -21,6 +21,8 @@
                   <th> Phone</th>
                   <th> Alternate Phone</th>
                   <th> Email</th>
+                  <th></th>
+                  <th></th>
 
 
               </tr>
@@ -31,15 +33,15 @@
 
             {%for supplier in suppliers%}
 
-            <tr>
+            <tr class="grey-text">
                 <td>{{supplier.name}}</td>
                 <td>{{supplier.address}}</td>
                 <td>{{supplier.phone}}</td>
                 <td>{{supplier.alternate_phone}}</td>
                 <th>{{supplier.email}}</th>
 
-                <td><a href="/sales/supplier/edit/{{supplier.id}}">Edit</a></td>
-                <td><a href="/sales/supplier/delete/{{supplier.id}}">Delete</a></td>
+                <td><a href="{%url 'sales:supplier_edit' supplier.id%}">Edit</a></td>
+                <td><a href="{%url 'sales:supplier_delete' supplier.id%}">Delete</a></td>
 
 
             </tr>
