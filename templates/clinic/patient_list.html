@@ -8,13 +8,20 @@
 
         {%block main_content%}
 
+        <div class="mybuttons">
+            <a href="{%url 'clinic:patient_add'%}" class="btn teal">Create</a>
+            <a href="{%url 'clinic:patient_add'%}" class="btn teal">Export</a>
+
+        </div>
+        
+
         {% if patients%}
 
         <table class="table bordered striped">
 
             <thead>
 
-              <tr class="teal lighten-3 white-text">
+              <tr class="purple white-text">
                   <th> First Name</th>
                   <th> Last Name</th>
                   <th> Gender</th>
@@ -55,7 +62,7 @@
 
         </table>
 
-
+        {%include 'pagination.html'%}
 
         {%else%}
 

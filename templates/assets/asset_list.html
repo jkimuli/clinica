@@ -8,18 +8,27 @@
 
 {%block main_content%}
 
+<div class="mybuttons">
+    <a href="{%url 'assets:asset_add'%}" class="btn teal">Create</a>
+    <a href="{%url 'assets:asset_add'%}" class="btn teal">Export</a>
+</div>
+
+
 {%if assets%}
 
    <table class="bordered">
 
-    <thead class="teal lighten-3 white-text">
+    <thead class="purple white-text">
         <th>Name</th>            
         <th>Category</th>
         <th>Registration Date</th>
         <th>Functional Status</th>
         <th>Service Interval</th>
         <th>Last Service Date</th>
-        <th>Service Status</th>    
+        <th>Service Status</th>
+        <th></th>
+        <th></th>   
+
     </thead>
 
     {%for asset in assets%}

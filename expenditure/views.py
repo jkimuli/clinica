@@ -20,13 +20,19 @@ class ExpenseDetailView(LoginRequiredMixin,DetailView):
 
 
 class ExpenseUpdateView(UserPassesTestMixin,UpdateView):
+    fields = '__all__'
+    model = Expense
+    template_name = 'expenditure/expense_add.html'
+    success_url = reverse_lazy('expenditure:expense_list')
 
-    pass
+    def test_func(self):
+        return self.request.user.is_superuser
 
 
 class ExpenseDeleteView(UserPassesTestMixin,DeleteView):
 
-    pass
+    def test_func(self):
+        return self.request.user.is_superuser
 
 class ExpenseListView(LoginRequiredMixin,ListView):
     model = Expense

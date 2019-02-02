@@ -9,13 +9,22 @@
 
       {%block main_content%}
 
+      <div class="mybuttons">
+
+        <a href="{%url 'expenditure:expense_add'%}" class="btn teal">Create</a>
+        <a href="{%url 'expenditure:expense_add'%}" class="btn teal">Export</a>
+
+      </div>
+
+      
+
         {%if expenses%}
 
         <table class="table striped">
 
             <thead>
 
-              <tr class="teal lighten-3 white-text">
+              <tr class="purple white-text">
                   <th> Date Added</th>
                   <th> Particulars</th>
                   <th> Amount</th>
@@ -50,7 +59,7 @@
 
         </table>
 
-
+        {%include 'pagination.html'%}
 
         {%else%}
 

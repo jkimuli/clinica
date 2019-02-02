@@ -20,6 +20,7 @@ class PatientListView(LoginRequiredMixin,ListView):
     model = Patient
     context_object_name = "patients"
     template_name = 'clinic/patient_list.html'
+    paginate_by=1
 
 class EmployeeListView(LoginRequiredMixin,ListView):
     model = Employee
@@ -54,12 +55,14 @@ class CreateVisitView(LoginRequiredMixin,CreateView):
     model = Visit
     template_name = 'clinic/visit_add.html'
     fields = '__all__'
+    success_url = reverse_lazy('clinic:visit_list')
 
 
 class UpdatePatientView(LoginRequiredMixin,UpdateView):
     model = Patient
     template_name = 'clinic/patient_add.html'
     fields = '__all__'
+    success_url = reverse_lazy('clinic:patient_list')
 
 
 class UpdateEmployeeView(UserPassesTestMixin,UpdateView):
@@ -72,7 +75,10 @@ class UpdateEmployeeView(UserPassesTestMixin,UpdateView):
 
 
 class UpdateVisitView(LoginRequiredMixin,UpdateView):
-    pass
+    model = Visit
+    fields = '__all__'
+    template_name = 'clinic/visit_add.html'
+    success_url = reverse_lazy('clinic:visit_list')
 
 
 class DetailEmployeeView(LoginRequiredMixin,DetailView):

@@ -8,11 +8,18 @@
 
         {%block main_content%}
 
+        <div class="mybuttons">
+            <a href="{%url 'clinic:visit_add'%}" class="btn teal">Create</a>
+            <a href="{%url 'clinic:visit_add'%}" class="btn teal">Export</a>
+
+        </div>
+                
+
         {% if visits%}
 
         <table class="table striped ">
 
-            <thead class="teal lighten-3">
+            <thead class="purple">
 
               <tr class="white-text">
                   <th> Date</th>
@@ -51,7 +58,7 @@
 
         </table>
 
-
+        {%include 'pagination.html'%}
 
         {%else%}
 

@@ -12,7 +12,7 @@ urlpatterns = [
     path('<int:pk>',views.AssetDetailView.as_view(),name='asset_detail'),
     path('edit/<int:pk>',views.AssetUpdateView.as_view(),name='asset_edit'),
     path('delete/<int:pk>',views.AssetDeleteView.as_view(),name='asset_delete'),
-    path('create',views.AssetCreateView.as_view(),name='asset_create'),
+    path('add',views.AssetCreateView.as_view(),name='asset_add'),
         
 ]
 

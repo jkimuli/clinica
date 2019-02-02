@@ -30,6 +30,8 @@ class SupplierCreateView(CreateView):
 class SupplierUpdateView(UpdateView):
     model = Supplier
     template_name = 'sales/supplier_add.html'
+    fields='__all__'
+    success_url = reverse_lazy('sales:supplier_list')
 
 
 class ProductListView(ListView):
@@ -56,6 +58,8 @@ class ProductCreateView(CreateView):
 class ProductUpdateView(UpdateView):
     model = Product
     template_name = 'sales/product_add.html'
+    fields = '__all__'
+    success_url = reverse_lazy('sales:product_list')
 
 
 class OrderListView(ListView):
@@ -92,7 +96,10 @@ class PurchaseCreateView(CreateView):
 
 class PurchaseUpdateView(UpdateView):
     model = Purchase
-    template_name = 'sales/purchase_add.html'    
+    template_name = 'sales/purchase_add.html'
+    fields='__all__'
+    success_url = reverse_lazy('sales:purchase_list')
+
 
 
 

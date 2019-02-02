@@ -15,9 +15,9 @@ urlpatterns = [
     path('employee', views.EmployeeListView.as_view(), name='employee_list'),
     path('visit', views.VisitListView.as_view(), name='visit_list'),
 
-    path('patient/add', views.CreatePatientView.as_view(),name='patient_new'),
-    path('employee/add', views.CreateEmployeeView.as_view(),name='employee_new'),
-    path('visit/add', views.CreateVisitView.as_view(), name='visit_new'),
+    path('patient/add', views.CreatePatientView.as_view(),name='patient_add'),
+    path('employee/add', views.CreateEmployeeView.as_view(),name='employee_add'),
+    path('visit/add', views.CreateVisitView.as_view(), name='visit_add'),
 
     #path patterns for editing model entities
 

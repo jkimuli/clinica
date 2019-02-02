@@ -9,11 +9,18 @@
 
       {%block main_content%}
 
+      <div class="mybuttons">
+
+        <a href="{%url 'sales:purchase_add'%}" class="btn teal">Create</a>
+        <a href="{%url 'sales:purchase_add'%}" class="btn teal">Export</a>
+
+      </div>
+    
         {%if purchases%}
 
         <table class="striped bordered">
 
-            <thead class="teal lighten-3 white-text">
+            <thead class="purple lighten-2 white-text">
 
               <tr>
                   <th> Date Purchased</th>
@@ -50,7 +57,7 @@
 
         </table>
 
-
+        {%include 'pagination.html'%}
 
         {%else%}
 
