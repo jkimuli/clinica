@@ -43,51 +43,21 @@ class Supplier(models.Model):
 
 class Order(models.Model):
 
-    FULLY_PAID = 0
-    PARTIAL_PAID = 1
-    NOT_PAID = 2
-
-    ORDER_STATUS = (
-     (FULLY_PAID,'Fully Paid'),
-     (PARTIAL_PAID, 'Partially Paid'),
-     (NOT_PAID, 'Not Paid'),
-    )
-
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    created = models.DateField(auto_now_add=True)
+    updated = models.DateField(auto_now=True)
     employee = models.ForeignKey('clinic.Employee',on_delete=models.SET_DEFAULT,default="Clinic Attendant",verbose_name='Processed By')
-    paid = models.PositiveSmallIntegerField(choices=ORDER_STATUS,editable=False,default=NOT_PAID)
+    paid = models.BooleanField(default=False,editable=True,verbose_name="Mark as Fully Paid")
     customer = models.CharField(max_length=100,default='Cash Payment',help_text="Enter Customer name to keep track of debtors")
     order_amount = models.DecimalField(verbose_name='Amount Paid',max_digits=12,decimal_places=2)
 
+    @property
     def total_cost(self):
         return sum(item.sub_total() for item in self.items.all())
 
-    def save(self,*args,**kwargs):
-        
-        super(Order,self).save(*args,**kwargs)  
+    @property
+    def balance(self):
+        return self.total_cost-self.order_amount    
 
-        if self.pk:
-            #set the paid status based on the order_amount and the total cost of the order 
-            if self.order_amount == self.total_cost():
-                # order is fully paid
-                self.paid = Order.FULLY_PAID
-            elif self.order_amount == 0:
-                self.paid = Order.NOT_PAID
-            else:
-                self.paid = Order.PARTIAL_PAID
-
-            super(Order,self).save(*args,**kwargs)    
-
-        # Create a new Debtor in the database depending on the value of self.paid
-
-        if (self.paid==Order.NOT_PAID) or (self.paid==Order.PARTIAL_PAID):
-            amount = self.total_cost() - self.order_amount
-            debtor = Debtor()
-            debtor.debt_amount = amount
-            debtor.order = self
-            debtor.save()       
-        
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='order_items',verbose_name='Product Name')
@@ -116,25 +86,3 @@ class Purchase(models.Model):
 
         return "{} - Quantity {} purchased on {}".format(self.product,self.quantity,self.created)
 
-class Debtor(models.Model):
-    created = models.DateField(auto_now_add=True,verbose_name="Date")
-    order = models.ForeignKey(Order,on_delete=models.CASCADE)
-    clear_debt = models.BooleanField(default=False)
-    debt_amount = models.DecimalField(max_digits=12,decimal_places=2,verbose_name="Debt Amount",editable=False)
-
-    class Meta:
-        verbose_name_plural = "Debtors"    
-
-    @property
-    def debt_status(self):
-        if not self.clear_debt:
-              return "Debt Outstanding"
-
-    def save(self,*args,**kwargs):
-        super(Debtor,self).save(*args,**kwargs)
-
-        if self.pk and self.clear_debt:
-            # if clear_debt is set to True , remove the specific object from the list of debtors
-            debtor = Debtor.objects.filter(pk=self.pk)
-            debtor.delete()
-                

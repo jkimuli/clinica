@@ -33,7 +33,7 @@ LOGOUT_REDIRECT_URL = '/clinic/'
 INSTALLED_APPS = (
    # 'material.theme.purple',
     'material',
-    'crispy_forms',
+    'widget_tweaks',
     'suit',
     'django.contrib.admin',
     'django.contrib.auth',

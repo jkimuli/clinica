@@ -13,18 +13,24 @@
           <span class="card-title center">Create New Patient</span>
         </br>
 
-          <form method="POST">
+          <!--<form method="POST" novalidate>
               {% csrf_token %}
               {{form.as_p}}
               <br/>
               <button type="submit" name="_submit" class="btn teal ">Submit</button>
+          </form>-->
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% include 'form_partial.html' with form=form %}
+            <br>
+            <button type="submit" class="btn teal">Submit</button>
           </form>
           
         </div>
         
-      </div> 
-
-      
+      </div>
+    
  
   {%endif%}
 

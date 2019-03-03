@@ -20,7 +20,7 @@ class PatientListView(LoginRequiredMixin,ListView):
     model = Patient
     context_object_name = "patients"
     template_name = 'clinic/patient_list.html'
-    paginate_by=1
+    paginate_by=2
 
 class EmployeeListView(LoginRequiredMixin,ListView):
     model = Employee

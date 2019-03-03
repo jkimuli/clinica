@@ -100,6 +100,11 @@ class PurchaseUpdateView(UpdateView):
     fields='__all__'
     success_url = reverse_lazy('sales:purchase_list')
 
+class PaymentListView(ListView):
+    template_name = 'sales/payment_list.html'
+    queryset = Order.objects.filter(paid=False)
+    context_object_name = 'orders'   
+
 
 
 

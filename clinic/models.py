@@ -70,7 +70,7 @@ class Visit(models.Model):
     examination = models.TextField(verbose_name='Physical Examination Carried Out')
     diagnosis = models.TextField(verbose_name="Diagnosis")
     attendant = models.ForeignKey(Employee,on_delete=models.SET_DEFAULT,default='Unknown Employee',verbose_name='Attendant',related_name='visits_handled')
-    visit_date = models.DateTimeField(auto_now_add=True, verbose_name="Visit Date")
+    visit_date = models.DateField(auto_now_add=True, verbose_name="Visit Date")
     lab_tests = models.TextField(verbose_name=' Lab Tests Taken',blank=True,default="None")
     prescriptions = models.TextField(verbose_name='Prescriptions Required',blank=True,default="None")
 

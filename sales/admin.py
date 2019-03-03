@@ -1,7 +1,7 @@
 __author__ = 'julius'
 
 from django.contrib import admin
-from .models import Category,Product,Order, OrderItem, Supplier,Debtor,Purchase
+from .models import Category,Product,Order, OrderItem, Supplier,Purchase
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -42,6 +42,5 @@ admin.site.register(Product,ProductAdmin)
 admin.site.register(Category,CategoryAdmin)
 admin.site.register(Order,OrderAdmin)
 admin.site.register(Supplier,SupplierAdmin)
-admin.site.register(Debtor,DebtorAdmin)
 admin.site.register(Purchase,PurchaseAdmin)
 
