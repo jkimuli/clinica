@@ -31,10 +31,7 @@ LOGOUT_REDIRECT_URL = '/clinic/'
 # Application definition
 
 INSTALLED_APPS = (
-   # 'material.theme.purple',
-    'material',
-    'widget_tweaks',
-    'suit',
+       
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -124,31 +121,29 @@ USE_L10N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = 'clinic.Employee'
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
+# https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
 
-STATIC_PATH = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
-STATICFILES_DIRS=[
-    STATIC_PATH,
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'clinica/static'),
 ]
 
-# Django Suit configuration 
-SUIT_CONFIG = {
-    # header
+MEDIA_URL = '/media/'
 
-    'ADMIN_NAME': 'My Clinic Administration',
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
-    'SEARCH_URL':'',
+#Messages
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
     
-    'MENU_EXCLUDE': ('auth',),
-    
-    # misc
-
-    'LIST_PER_PAGE': 20
 }
+
+
+
 
