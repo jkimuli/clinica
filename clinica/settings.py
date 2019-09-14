@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -24,9 +23,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = '/clinic/'
+LOGIN_REDIRECT_URL = 'dashboard'
 
-LOGOUT_REDIRECT_URL = '/clinic/'
+LOGOUT_REDIRECT_URL = 'home'
 
 # Application definition
 
@@ -40,12 +39,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'clinic.apps.ClinicConfig',
-    'sales.apps.SalesConfig',
+    'pharmacy.apps.PharmacyConfig',
     'expenditure.apps.ExpenditureConfig',
     'assets.apps.AssetConfig',
+
+    'crispy_forms',
   
    
 )
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -102,11 +105,16 @@ WSGI_APPLICATION = 'clinica.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'USER':'django_db_user',
+        'NAME':'clinicdb',
+        'PASSWORD':'django123',
     }
 }
+
+AUTH_USER_MODEL = 'clinic.Employee'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -140,9 +148,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
-    messages.ERROR: 'danger',
-    
+    messages.ERROR: 'danger',    
 }
+
 
 
 

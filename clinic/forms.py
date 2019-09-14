@@ -1,23 +1,12 @@
-from django import forms
-from django.contrib.auth.forms import UserCreationForm,UserChangeForm
-from clinic.models import Employee,Patient
+from django.forms import ModelForm
+from . models import Visit,Patient
 
+class VisitForm(ModelForm):
+    class Meta:
+        model = Visit
+        fields = ['category','attendant','clinical_notes','lab_tests','prescriptions']  
 
-class EmployeeUserCreationForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = Employee
-        fields = ('username','email','phone','alternate_phone','designation',)
-
-class EmployeeUserChangeForm(UserChangeForm):
-    class Meta(UserChangeForm.Meta):
-        model = Employee  
-        fields = ('username','email','phone','alternate_phone','designation',)
-
-class PatientForm(forms.ModelForm):
+class PatientForm(ModelForm):
     class Meta:
         model = Patient
         fields = '__all__'
-        widgets = {
-            'gender': forms.Select()  
-            
-        }        

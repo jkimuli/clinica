@@ -1,41 +1,54 @@
 # Create your views here.
+from django.shortcuts import render,redirect,get_object_or_404
+from django.urls import reverse
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
-from django.views.generic import CreateView,DetailView,DeleteView,ListView,UpdateView
-from django.urls import reverse_lazy
+from .forms import ExpenseForm
 from .models import Expense
-from django.contrib.auth.mixins import UserPassesTestMixin,LoginRequiredMixin
 
-class ExpenseCreateView(UserPassesTestMixin,CreateView):
-    fields = ('particulars','amount','incurred_by')
-    model = Expense
-    template_name = 'expenditure/expense_add.html'
-    success_url = reverse_lazy('expenditure:expense_list')
+# Create your views here.
 
-    def test_func(self):
-        return self.request.user.is_superuser
+def expense_index(request):
+    expenses = Expense.objects.order_by('-expense_date')
+    paginator = Paginator(expenses,1)
+    page = request.GET.get('page')
+    paged_expenses = paginator.get_page(page)   
+    context = {
+        'expenses': paged_expenses
+    }
 
-class ExpenseDetailView(LoginRequiredMixin,DetailView):
+    return render(request,'expenditure/expenses.html', context)
 
-    pass
+def expense_add(request):
+
+    if request.method == 'POST':
+        form = ExpenseForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('expenses'))
+    else:
+
+        form = ExpenseForm()
+
+    return render(request,'expenditure/expense_add.html',{'form': form , 'title': 'Add New Expense'})   
+
+def expense_edit(request,id):
+    expense = get_object_or_404(Expense,pk=id)
+    form = ExpenseForm(request.POST or None, instance=expense)
+
+    if form.is_valid():
+        form.save()
+        return redirect('expenses')
+
+    return render(request,'expenditure/expense_add.html', {'form': form, 'title': 'Update Expense Record'})          
+
+def expense_detail(request,id):
+    expense = get_object_or_404(Expense,pk=id)
+    return render(request,'expenditure/expense.html',{'expense': expense })    
 
 
-class ExpenseUpdateView(UserPassesTestMixin,UpdateView):
-    fields = '__all__'
-    model = Expense
-    template_name = 'expenditure/expense_add.html'
-    success_url = reverse_lazy('expenditure:expense_list')
 
-    def test_func(self):
-        return self.request.user.is_superuser
+        
 
-
-class ExpenseDeleteView(UserPassesTestMixin,DeleteView):
-
-    def test_func(self):
-        return self.request.user.is_superuser
-
-class ExpenseListView(LoginRequiredMixin,ListView):
-    model = Expense
-    context_object_name = "expenses"
-    template_name = 'expenditure/expense_list.html'
 

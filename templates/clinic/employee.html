@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   {{employee}}
+   
+{% endblock title %}
+
+{% block  content %}
+
+   <section id="employee" class="bg-light py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h4>
+                 Employee Details</h4>
+            </div>
+
+            <img  class="card-img-top" src={{employee.employee_photo.url}} >
+            <div class="card-body">
+
+               <p>First Name: <span style="border-bottom:dotted;">{{employee.first_name}}</span></p>
+               <p>Last Name: <span style="border-bottom:dotted;">{{employee.last_name}}</span></p>
+               <p>Designation: <span style="border-bottom:dotted;"> {{employee.get_designation_display}}</span></p>
+               <p>Phone: <span style="border-bottom:dotted;"> {{employee.phone}} </span></p>
+               <p>Alternate Phone: <span style="border-bottom:dotted;"> {{employee.alternate_phone}} </span></p>
+               <p>Hire Date: <span style="border-bottom:dotted;">{{employee.hire_date}}</span></p>
+               
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    
+{% endblock content  %}

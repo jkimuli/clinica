@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   {{expense}}
+   
+{% endblock title %}
+
+{% block  content %}
+
+   <section id="expense" class="bg-light py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h4>
+                 Expense Details</h4>
+            </div>
+            
+            <div class="card-body">
+
+               <p>Expense Date: <span style="border-bottom:dotted;">{{expense.expense_date}}</span></p>
+               <p>Particulars: <span style="border-bottom:dotted;">{{expense.particulars}}</span></p>
+               <p>Amount: <span style="border-bottom:dotted;"> {{expense.amount}}</span></p>
+               <p>Employee: <span style="border-bottom:dotted;"> {{expense.incurred_by}} </span></p>              
+               
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    
+{% endblock content  %}

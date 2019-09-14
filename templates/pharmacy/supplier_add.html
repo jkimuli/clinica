@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+
+|New Supplier
+
+{% endblock %}
+
+{% block content%}
+
+   <section id="add_form" class="bg-light py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h4>
+                 {{title}}</h4>
+            </div>
+            <div class="card-body">
+              {% if form %}
+              <form action="" method="POST">
+                <!-- Alerts -->
+                {% include 'partials/_alerts.html'%}
+                {% csrf_token %}                 
+
+                {{ form|crispy }}                
+
+                <input type="submit" value="Submit" class="btn btn-secondary btn-block">
+              </form>
+
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+
+
+

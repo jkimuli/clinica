@@ -1,8 +1,9 @@
+from datetime import datetime
 
+from django.urls import reverse
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-import datetime
-from django.urls import reverse,reverse_lazy
+from  django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 # Create your models here.
 
@@ -41,24 +42,21 @@ class Patient(models.Model):
         return '{}  {}'.format(self.first_name, self.last_name)
 
     def get_absolute_url(self):
-        return reverse('patient-detail', args=[self.pk])
-
-    @property
-    def get_full_name(self):
-        """returns the person's full name"""
-
-        return '{}  {}'.format(self.first_name, self.last_name)
+        return reverse('patient-detail', args=[self.pk])    
 
 class Employee(AbstractUser):
     phone = models.CharField(max_length=30,verbose_name='Phone')
     alternate_phone = models.CharField(max_length=30,blank=True,null=True,verbose_name='Alternate Phone')
     designation = models.CharField(max_length=2,choices=STAFF_DESIGNATION,verbose_name='Designation')
+    employee_photo = models.ImageField(upload_to='employee_images/', default='employee_images/placeholder.png', blank=True)
+    is_mvp = models.BooleanField(default=False,help_text="is employee of month")
+    hire_date = models.DateTimeField(default=datetime.now,blank=True)
 
     class Meta:
         verbose_name_plural = 'Employees'
         
     def get_absolute_url(self):
-        return reverse('staff-detail', args=[self.pk])
+        return reverse('employee-detail', args=[self.pk])
 
     def __str__(self):
 
@@ -67,12 +65,11 @@ class Employee(AbstractUser):
 class Visit(models.Model):
     patient = models.ForeignKey(Patient,on_delete=models.CASCADE,verbose_name="Patient",related_name='patient_history')
     category = models.CharField(max_length=4, choices=CLINIC_TYPE,verbose_name="Visit Type")
-    examination = models.TextField(verbose_name='Physical Examination Carried Out')
-    diagnosis = models.TextField(verbose_name="Diagnosis")
-    attendant = models.ForeignKey(Employee,on_delete=models.SET_DEFAULT,default='Unknown Employee',verbose_name='Attendant',related_name='visits_handled')
+    clinical_notes = models.TextField(help_text='Examination and Diagnosis Carried Out')
+    attendant = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT,default='Unknown Employee',verbose_name='Attendant',related_name='visits_handled')
     visit_date = models.DateField(auto_now_add=True, verbose_name="Visit Date")
-    lab_tests = models.TextField(verbose_name=' Lab Tests Taken',blank=True,default="None")
-    prescriptions = models.TextField(verbose_name='Prescriptions Required',blank=True,default="None")
+    lab_tests = models.TextField(verbose_name='Lab Tests Taken',blank=True)
+    prescriptions = models.TextField(verbose_name='Prescriptions Required',blank=True)
 
     class Meta:
         verbose_name_plural = 'Clinic Visits'

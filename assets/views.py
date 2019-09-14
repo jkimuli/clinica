@@ -1,41 +1,58 @@
-from django.views.generic import ListView,DetailView,CreateView,DeleteView,UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
-from django.urls import reverse_lazy
+
+# Create your views here.
+from django.shortcuts import render,redirect,get_object_or_404
+from django.urls import reverse
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+
+from .forms import AssetForm
 from .models import Asset
 
 # Create your views here.
 
-class AssetListView(LoginRequiredMixin,ListView):
-    model = Asset
-    context_object_name = 'assets'
-    template_name = 'assets/asset_list.html'
+def asset_index(request):
+    assets = Asset.objects.all()
+    paginator = Paginator(assets,1)
+    page = request.GET.get('page')
+    paged_assets = paginator.get_page(page)  
 
-class AssetCreateView(UserPassesTestMixin,CreateView):
-    model = Asset
-    fields = '__all__'
-    template_name = 'assets/asset_add.html'
-    success_url = reverse_lazy('assets:asset_list')
-     
-    def test_func(self):
-        return self.request.user.is_superuser
+    context = {
+        'assets': paged_assets
+    }
 
-class AssetDeleteView(UserPassesTestMixin,DeleteView):
+    return render(request,'assets/assets.html', context)
 
-    def test_func(self):
-        return self.request.user.is_superuser    
+def asset_add(request):
 
-class AssetDetailView(LoginRequiredMixin,DetailView):
-    pass
+    if request.method == 'POST':
+        form = AssetForm(request.POST)
 
-class AssetUpdateView(UserPassesTestMixin,UpdateView):
-    model = Asset
-    fields = '__all__'
-    template_name = 'assets/asset_add.html'
-    success_url = reverse_lazy('assets:asset_list')
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('assets'))
+    else:
+
+        form = AssetForm()
+
+    return render(request,'assets/asset_add.html',{'form': form , 'title': 'Add New'}) 
+
+def asset_edit(request,id):
+    asset = get_object_or_404(Asset,pk=id)
+    form =  AssetForm(request.POST or None, instance=asset)
+
+    if form.is_valid():
+        form.save()
+        return redirect(reverse('assets'))
+    
+    return render(request,'assets/asset_add.html', {'form': form , 'title': 'Update'} ) 
 
 
-    def test_func(self):
-        return self.request.user.is_superuser 
+
+
+        
+
+
+
+
 
        
 

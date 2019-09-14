@@ -1,56 +1,42 @@
-{%extends 'base_form.html'%}
+{% extends 'base.html' %}
 
-{%block page_title%}
-   Add New Asset to Inventory
-{%endblock%}
+{% load crispy_forms_tags %}
 
-{%block form_content%}
+{% block title %}
 
-  {%if form%}
-  
-     <div class="card">
-        <div class="card-content grey-text">
-          <span class="card-title center">Create New Asset</span>
-        </br>
+|New Asset
 
-          <!--<form method="POST">
-              {% csrf_token %}
-              {{form.as_p}}
-              <br/>
-              <button type="submit" name="_submit" class="btn teal lighten-3">Submit</button>
-          </form>-->
+{% endblock %}
 
-          <form method="post" novalidate>
-            {% csrf_token %}
-            {% include 'form_partial.html' with form=form %}
-            <br>
-            <button type="submit" class="btn teal">Submit</button>
-          </form>
-          
+{% block content%}
+
+   <section id="add_form" class="bg-light py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h4>
+                 {{title}} Asset</h4>
+            </div>
+            <div class="card-body">
+              {% if form %}
+              <form action="" method="POST" novalidate>
+                <!-- Alerts -->
+                {% include 'partials/_alerts.html'%}
+                {% csrf_token %}                 
+
+                {{ form|crispy }}                
+
+                <input type="submit" value="Submit" class="btn btn-secondary btn-block">
+              </form>
+
+              {% endif %}
+            </div>
+          </div>
         </div>
-        
-      </div> 
+      </div>
+    </div>
+  </section>
 
-      
- 
-  {%endif%}
-
-{%endblock%} 
-
-{%block jquery_code%}
-
-<script type="text/javascript">
-
-document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('select');
-    
-    var instances = M.FormSelect.init(elems);
-  }); 
-
-</script>
-
-  {%endblock%}
-
-
-
-
+{% endblock %}

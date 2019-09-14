@@ -1,127 +1,143 @@
-# Create your views here.
-
-from django.urls import reverse
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
-
-from django.views.generic import ListView
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+from django.forms import inlineformset_factory
+from django.views.generic.edit import CreateView
 
-from clinic.models import Patient, Employee, Visit
-from clinic.forms import EmployeeUserCreationForm,EmployeeUserChangeForm,PatientForm
+from django.core.paginator import EmptyPage,PageNotAnInteger,Paginator
 
+from .models import Visit,Employee,Patient
+from .forms import PatientForm,VisitForm
 
-def index(request):
-
-    return render(request,'clinic/index.html')
-
-class PatientListView(LoginRequiredMixin,ListView):
-    model = Patient
-    context_object_name = "patients"
-    template_name = 'clinic/patient_list.html'
-    paginate_by=2
-
-class EmployeeListView(LoginRequiredMixin,ListView):
-    model = Employee
-    context_object_name = "employees"
-    template_name = "clinic/employee_list.html"
+from expenditure.models import Expense
 
 
-class VisitListView(LoginRequiredMixin,ListView):
-    model = Visit
-    context_object_name = "visits"
-    template_name = "clinic/visit_list.html"
+def visit_index(request):
+    # get the latest 50 clinic visits recorded in the database
+
+    visits = Visit.objects.order_by('-visit_date')[:50] 
+    paginator = Paginator(visits,1)
+    page = request.GET.get('page')
+    paged_visits = paginator.get_page(page)   
+
+    context = {
+        'visits': paged_visits
+    }
+
+    return render(request,'clinic/visits.html',context)
+
+def dashboard(request):
+    #get currently logged in user
+    user = request.user
+
+    # return expense report for current user
+    expenses = Expense.objects.filter(incurred_by=user)[:5]
 
 
-class CreatePatientView(LoginRequiredMixin,CreateView):
-    model = Patient
-    template_name = 'clinic/patient_add.html'
-    form_class = PatientForm
-    success_url = reverse_lazy('clinic:patient_list')
+    #return visits handled by currently login user
+    context = {
+        'visits' : user.visits_handled.all()[:10],
+        'expenses': expenses
+    }
+    return render(request,'clinic/dashboard.html', context )
 
+def patient_index(request):
+    patients = Patient.objects.all()
+    paginator = Paginator(patients,1)
+    page = request.GET.get('page')
+    paged_patients = paginator.get_page(page)
 
-class CreateEmployeeView(UserPassesTestMixin,CreateView):
-    model = Employee
-    form_class= EmployeeUserCreationForm
-    template_name = 'clinic/employee_add.html'
-    success_url = reverse_lazy('clinic:visit_list')
+    context = {
+        'patients': paged_patients
+    }
 
-    def test_func(self):
-        return self.request.user.is_superuser
+    return render(request,'clinic/patients.html', context)
+    
 
+def employee_index(request):
+    employees = Employee.objects.all()
+    paginator = Paginator(employees,1)
+    page = request.GET.get('page')
+    paged_employees = paginator.get_page(page)
 
-class CreateVisitView(LoginRequiredMixin,CreateView):
-    model = Visit
-    template_name = 'clinic/visit_add.html'
-    fields = '__all__'
-    success_url = reverse_lazy('clinic:visit_list')
+    context = {
+        'employees': paged_employees
+    }
 
+    return render(request,'clinic/employees.html',context)
 
-class UpdatePatientView(LoginRequiredMixin,UpdateView):
-    model = Patient
-    template_name = 'clinic/patient_add.html'
-    fields = '__all__'
-    success_url = reverse_lazy('clinic:patient_list')
+def visit_detail(request,visit_id):
+    # return a single clinic record with the passed in visit_id
 
+    visit = get_object_or_404(Visit,pk=visit_id)
 
-class UpdateEmployeeView(UserPassesTestMixin,UpdateView):
-    model = Employee
-    form_class=EmployeeUserChangeForm
-    template_name = 'clinic/employee_add.html'
+    return render(request,'clinic/visit.html', {'visit': visit })
 
-    def test_func(self):
-        return self.request.user.is_superuser
+def patient_detail(request,patient_id):
+    # return a single patient recrd with given patient_id
 
+    patient = get_object_or_404(Patient,pk=patient_id)
 
-class UpdateVisitView(LoginRequiredMixin,UpdateView):
-    model = Visit
-    fields = '__all__'
-    template_name = 'clinic/visit_add.html'
-    success_url = reverse_lazy('clinic:visit_list')
+    return render(request,'clinic/patient.html', {'patient': patient })    
 
+def employee_detail(request,employee_id):
+    # return a single employee with given id
+    
+    employee = get_object_or_404(Employee,pk=employee_id)
+    return render(request,'clinic/employee.html', {'employee': employee })   
 
-class DetailEmployeeView(LoginRequiredMixin,DetailView):
-    model = Employee
-    template_name = 'clinic/employee_detail.html'
-    context_object_name = 'employee'
+def visit_add(request):
+    VisitFormSet = inlineformset_factory(Patient, Visit, extra=1, can_delete=False,form=VisitForm)                                    
+    if request.method == 'POST':
+        form = PatientForm(request.POST)
+        formset = VisitFormSet(request.POST)
 
+        if form.is_valid() and formset.is_valid():
+            patient = form.save()
+            visits = formset.save(commit=False)
+            for visit in visits:
+                visit.patient = patient
+                #visit.attendant = request.user.get_full_name()
+                visit.save()                   
 
-class PatientHistoryView(LoginRequiredMixin,DetailView):
-    model = Patient
-    template_name = 'clinic/patient_detail.html'
-    context_object_name = 'patient'
+            return redirect('visits')        
+    else:
+        form = PatientForm()
+        formset = VisitFormSet()
 
-class DetailVisitView(LoginRequiredMixin,DetailView):
-    model = Visit
+    return render(request,'clinic/record_add.html',{'form': form, 'formset': formset})  
 
+def patient_edit(request,id):
+    patient = get_object_or_404(Patient,pk=id)
+    form = PatientForm(request.POST or None, instance=patient)
 
-class DeletePatientView(LoginRequiredMixin,DeleteView):
-    model = Patient
-    success_url = reverse_lazy('patient_list')
+    if form.is_valid():
+        form.save()
+        return redirect('patients')   
 
+    return render(request, 'clinic/patient_add.html', {'form': form, 'title':'Update Patient'}) 
 
-class DeleteEmployeeView(UserPassesTestMixin,DeleteView):
-    model = Employee
-    success_url = reverse_lazy('employee_list')
+def visit_edit(request,id):
+    VisitFormSet = inlineformset_factory(Patient,Visit, extra=1, can_delete=False,form=VisitForm
+                                    )
+    visit = get_object_or_404(Visit,pk=id)
+    patient = get_object_or_404(Patient,pk=visit.patient_id) 
 
-    def test_func(self):
-        return self.request.user.is_superuser
+    form = PatientForm(request.POST or None, instance=patient)
+    formset = VisitForm(request.POST or None, instance=visit)
 
+    if form.is_valid() and formset.is_valid():
+        form.save()
+        formset.save()           
 
-class DeleteVisitView(LoginRequiredMixin,DeleteView):
-    model = Visit
-    success_url = reverse_lazy('visit_list')
+        return redirect('visits')
 
-class EmployeeAssignmentDetails(LoginRequiredMixin,DetailView):
-    model = Employee
-    template_name = 'clinic/employee_assignment.html'
-    context_object_name = 'employee'
+    return render(request,'clinic/record_add.html',{'form': form, 'formset': formset})                                           
 
-class EmployeeExpenseDetails(LoginRequiredMixin,DetailView):
-    model = Employee
-    template_name = 'clinic/employee_expense.html'
-    context_object_name = 'employee'
+    
+           
+
+            
+
 
 
 

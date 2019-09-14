@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  | Clinic Visits
+
+{% endblock %}        
+
+{% block content%} 
+
+  <section id="visits" class="bg-light py-5">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          {% if visits %}
+
+        <table class="table table-bordered table-hover ">
+            <thead class="thead-light">
+              <tr>
+                  <th> Date</th>
+                  <th> Patient</th>
+                  <th> Category</th>
+                  <th> Attendant</th>
+                  <th></th>
+                  
+              </tr>
+            </thead>
+            <tbody>
+            {% for visit in visits%}
+            <tr class="grey-text">
+                <td>{{visit.visit_date}}</td>
+                <td>{{visit.patient}}</td>
+                <td>{{visit.get_category_display}}</td>
+                <td>{{visit.attendant}}</td>                
+                <td><a href="{% url 'visit' visit.id %}">Details</a></td>              
+
+            </tr>
+            {% endfor%}
+            </tbody>
+        </table>      
+
+        {% else%}
+        <p> No visits added to database yet!</p>
+        {% endif%}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          {% if visits.has_other_pages %}
+
+          <ul class="pagination">
+            {% if visits.has_previous %}
+
+              <li class="page-item">
+
+               <a class="page-link" href="?page={{visits.previous_page_number}}">
+                &laquo;
+                </a>
+              
+              </li>
+
+            {% else %}  
+
+              <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+            
+            {% endif %}
+
+            {% for i in visits.paginator.page_range %}
+
+               {% if visits.number == i %}
+
+                 <li class="page-item active">
+                   <a href="" class="page-link">{{i}}</a>
+                 </li>
+
+                {% else %} 
+
+                 <li class="page-item"><a href="?page={{i}}" class="page-link">{{i}}</a></li>
+
+               {% endif %}
+
+
+            {% endfor %}
+
+            {% if visits.has_next %}
+
+              <li class="page-item">
+
+               <a class="page-link" href="?page={{visits.next_page_number}}">
+                &raquo;
+                </a>              
+              </li>
+            {% else %}
+              <li class="page-item disabled"><a class="page-link">&raquo;</a></li>            
+            {% endif %}            
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </section>       
+
+  {% endblock%}
+

@@ -1,159 +1,37 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Clinic - {%block page_title%}
-    {%endblock%}
-  </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'css/all.css' %}">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <!-- Custom -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %} ">
+    <!-- Lightbox -->
+    <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %} ">
 
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-  {% include 'material/includes/material_css.html' %}
-  <style>
-    .fa-purple{
-      color:purple;
-    }
-
-    .mybuttons{
-      float:right;
-      margin-bottom: 10px;
-           
-    }
-    .paginator{
-      background: purple;
-      color: #fff;
-    }
-    
-  </style>
-  
-  
+    <title> My Hospital {% block title %} {% endblock%}</title>
 </head>
-
 <body>
-    <nav class="purple darken-2">
-        <div class="nav-wrapper">
-          <i class="fas fa-hospital-alt  fa-3 "></i>&nbsp;&nbsp; 
-          <a href="#" class="brand-logo ">My Clinic</a>
-          <ul id="nav-mobile" class="right hide-on-med-and-down">
-              
-              {%if user.is_authenticated%}
-                <li>Welcome, {{user.username}}</li>
-                <li><a href="{%url 'logout'%}">Logout</a></li>
-                <li><a href="{%url 'password_change'%}">Change Passsword</a></li>
-              
-              {%else%}
-              <li>Welcome, user</li>
-               <li><a href="{%url 'login'%}">Login</a></li>
-              {%endif%}   
-                           
-            
-          </ul>
-        </div>
-      </nav>
-  <div class="row">
+
+  {% include 'partials/_topbar.html' %}
+
+  {% include 'partials/_navbar.html' %}  
+
+  {% block content%}
+
+  {% endblock %}
+
+  {% include 'partials/_footer.html' %}
+
+  <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/lightbox.min.js' %}"></script>
     
-    <div class="col s12 m2">
-      {%block sidebar_content%}
-
-      <div class="section">
-        <div><h6>Clinic</h6></div> </br>
-        <div>
-                 
-           <i class="fas fa-notes-medical fa-2x fa-purple fa-fw"></i>
-           <a href="{%url 'clinic:visit_list'%}">Records</a>
-          </div>
-        </br> 
-          <div>
-              <i class="fas fa-female fa-2x  fa-purple fa-fw"></i>
-              <a href="{%url 'clinic:patient_list'%}">Patients</a>
-          </div>
-        </br>       
-          <div>
-            <i class="fas fa-user-md fa-2x fa-purple fa-fw"></i>
-            <a href="{%url 'clinic:employee_list'%}">Employees</a>
-          </div>
-             
-        
-      </div>
-      <div class="divider"></div>
-      <div class="section">
-        <div><h6> Sales </h6></div> </br>
-        
-        <div><i class="fas fa-capsules fa-2x fa-purple fa-fw"></i>
-          <a href="{%url 'sales:product_list'%}">Products</a></div>
-        </br>      
-        <div>
-            <i class="fas fa-shopping-cart fa-2x fa-purple fa-fw"></i>
-            <a href="{%url 'sales:order_list'%}">Orders</a>
-        </div>
-      </br> 
-        <div>
-           <i class="fas fa-dollar-sign fa-2x fa-purple fa-fw"></i>
-            <a href="{%url 'sales:payment_list'%}">Pending Payments</a>
-        </div>
-      
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="section">
-        <div><h6> Expenditure </h6></div></br>
-
-        <div>
-          <i class="fas fa-money-check fa-purple fa-fw fa-2x"> </i>
-          <a href="{%url 'expenditure:expense_list'%}">Expenses</a>
-        </div> 
-      </br>
-        <div>
-            <i class="fas fa-shopping-bag fa-purple fa-fw fa-2x"> </i>
-            <a href="{%url 'sales:purchase_list'%}">Purchases</a>
-          </div> 
-        </br>
-
-        <div>
-              <i class="fas fa-syringe fa-purple fa-fw fa-2x"> </i>
-              <a href="{%url 'sales:supplier_list'%}">Suppliers</a>
-         </div>   
-             
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="section">
-        <div><h6> Assets </h6></div></br>
-        <div>
-          <i class="fas fa-microscope fa-purple fa-fw fa-2x"></i>
-          <a href="{%url 'assets:asset_list'%}">Our Assets</a>
-          
-        </div>
-      </div>
-
-      {%endblock%}
-
-    </div>
-    
-    <div class="col s12 m10">
-      <div class="section">
-          {%block main_content%}
-
-          {%endblock%}
-
-      </div>
-    </div>
-
-  </div>
-
-  <footer class="page-footer purple darken-2">
-    <div class="container fa-purple">
-      <div class="row">
-        <div class="col s12 m12">
-          <p class="white-text center">Copyright &copy 2019 Julius Kimuli</p>
-        </div>
-      </div>
-
-    </div>
-  </footer>
-
 </body>
-
-{% include 'material/includes/material_js.html' %}
-
 </html>

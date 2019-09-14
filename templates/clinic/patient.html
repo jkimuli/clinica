@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   {{patient}}
+{% endblock title %}
+
+{% block  content %}
+
+   <section id="visit" class="bg-light py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h4>
+                 Patient Details</h4>
+            </div>
+            <div class="card-body">
+
+               <p>First Name: <span style="border-bottom:dotted;">{{patient.first_name}}</span></p>
+               <p>Last Name: <span style="border-bottom:dotted;">{{patient.last_name}}</span></p>
+               <p>Gender: <span style="border-bottom:dotted;"> {{patient.get_gender_display}}</span></p>
+               <p>Age: <span style="border-bottom:dotted;"> {{patient.age}} </span></p>
+               <p>Date of Birth: <span style="border-bottom:dotted;"> {{patient.dob}} </span></p>
+               <p>Place of Residence: <span style="border-bottom:dotted;">{{patient.address}}</span></p>
+               <p>Mobile Number: <span style="border-bottom:dotted;">{{patient.phone}}</span></p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    
+{% endblock content  %}

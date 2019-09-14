@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+
+|New Visit
+
+{% endblock %}
+
+{% block content%}
+
+   <section id="add_form" class="bg-light py-5">   
+      
+        
+    <form action="" method="POST" novalidate>
+        <!-- Alerts -->
+        {% include 'partials/_alerts.html'%}
+        {% csrf_token %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4>Patient Details</h4>
+                        </div>
+
+                        <div class="card-body">
+                              
+                            {{ form|crispy }}                 
+              
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mx-auto">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4>Medical Details</h4>
+                        </div>
+
+                        <div class="card-body">
+                              
+                            {{ formset|crispy }} 
+                                            
+                            <input type="submit" value="Submit" class="btn btn-secondary btn-block">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div> 
+
+                
+    </form>
+ 
+  </section>
+
+{% endblock %}
+
+
+

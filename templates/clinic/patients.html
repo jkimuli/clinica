@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %} | Patients {% endblock %}
+
+{% block content %} 
+
+<section id="patients" class="bg-light py-5">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        {% if patients%}
+
+    <table class="table table-bordered table-hover">
+
+            <thead class="thead-light">
+
+              <tr class="purple white-text">
+                  <th> First Name</th>
+                  <th> Last Name</th>
+                  <th> Gender</th>
+                  <th> Address</th>
+                  <th> Phone</th>
+                  <th> Date of Birth</th>
+                  <th> Age </th>
+                  <th></th> 
+                  <th></th>                
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for patient in patients%}
+
+            <tr class="grey-text">
+                <td>{{patient.first_name}}</td>
+                <td>{{patient.last_name}}</td>
+                <td>{{patient.get_gender_display}}</td>
+                <td>{{patient.address}}</td>
+                <td>{{patient.phone}}</td>
+                <td>{{patient.dob}}</td>
+                <td>{{patient.age}}</td>                
+                <td><a href="{% url 'patient' patient.id %}">Details</a></td>
+                <td><a href="{% url 'patient_edit' patient.id %}">Edit</a></td>                
+
+            </tr>
+
+            {%endfor%}
+
+            </tbody>
+
+        </table>       
+
+        {% else%}
+
+        <p> No patients added to database yet!</p>
+
+        {% endif%}
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        {% if patients.has_other_pages %}
+
+          <ul class="pagination">
+            {% if patients.has_previous %}
+
+              <li class="page-item">
+
+               <a class="page-link" href="?page={{patients.previous_page_number}}">
+                &laquo;
+                </a>
+              
+              </li>
+
+            {% else %}  
+
+              <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+            
+            {% endif %}
+
+            {% for i in patients.paginator.page_range %}
+
+               {% if patients.number == i %}
+
+                 <li class="page-item active">
+                   <a href="" class="page-link">{{i}}</a>
+                 </li>
+
+                {% else %} 
+
+                 <li class="page-item"><a href="?page={{i}}" class="page-link">{{i}}</a></li>
+
+               {% endif %}
+
+
+            {% endfor %}
+
+            {% if patients.has_next %}
+
+              <li class="page-item">
+
+               <a class="page-link" href="?page={{patients.next_page_number}}">
+                &raquo;
+                </a>              
+              </li>
+            {% else %}
+              <li class="page-item disabled"><a class="page-link">&raquo;</a></li>            
+            {% endif %}            
+          </ul>
+          {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+</section>       
+
+{% endblock%}
+
+
+
+
+
+
