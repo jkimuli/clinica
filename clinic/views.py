@@ -1,4 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.forms import inlineformset_factory
 from django.views.generic.edit import CreateView
@@ -6,9 +7,48 @@ from django.views.generic.edit import CreateView
 from django.core.paginator import EmptyPage,PageNotAnInteger,Paginator
 
 from .models import Visit,Employee,Patient
-from .forms import PatientForm,VisitForm
+from .forms import (PatientForm,VisitForm,UserRegistrationForm,
+                     UserEditForm,EmployeeForm)
 
 from expenditure.models import Expense
+
+
+def register(request):
+    if request.method == 'POST':
+        user_form = UserRegistrationForm(request.POST)
+
+        if user_form.is_valid():
+            # Create a new user object but avoid saving it yet
+            new_user = user_form.save(commit=False)
+            # Set the chosen password
+            new_user.set_password(user_form.cleaned_data['password'])
+            # Save the User object
+            new_user.save()
+
+            # Create an empty employee profile for this user
+            Employee.objects.create(user=new_user)
+
+            return render(request,'clinic/register_done.html',{'new_user': new_user})
+    else:
+        user_form = UserRegistrationForm()
+        return render(request,'clinic/register.html',{'form': user_form})
+
+@login_required
+def edit(request):
+    if request.method == 'POST':
+        user_form = UserEditForm(instance=request.user,data=request.POST)
+        employee_form = EmployeeForm(instance=request.user.employee,data=request.POST,files=request.FILES)
+
+        if user_form.is_valid() and employee_form.is_valid():
+            user_form.save()
+            employee_form.save()
+
+            return redirect('dashboard')
+    else:
+        user_form = UserEditForm(instance=request.user)
+        employee_form = EmployeeForm(instance=request.user.employee)
+
+    return render(request,'clinic/employee_edit.html',{'user_form': user_form,'employee_form': employee_form})        
 
 
 def visit_index(request):
@@ -32,12 +72,12 @@ def dashboard(request):
     # return expense report for current user
     expenses = Expense.objects.filter(incurred_by=user)[:5]
 
-
     #return visits handled by currently login user
     context = {
         'visits' : user.visits_handled.all()[:10],
         'expenses': expenses
     }
+
     return render(request,'clinic/dashboard.html', context )
 
 def patient_index(request):
@@ -73,7 +113,7 @@ def visit_detail(request,visit_id):
     return render(request,'clinic/visit.html', {'visit': visit })
 
 def patient_detail(request,patient_id):
-    # return a single patient recrd with given patient_id
+    # return a single patient record with given patient_id
 
     patient = get_object_or_404(Patient,pk=patient_id)
 
@@ -96,7 +136,7 @@ def visit_add(request):
             visits = formset.save(commit=False)
             for visit in visits:
                 visit.patient = patient
-                #visit.attendant = request.user.get_full_name()
+                visit.attendant = request.user
                 visit.save()                   
 
             return redirect('visits')        
@@ -131,7 +171,18 @@ def visit_edit(request,id):
 
         return redirect('visits')
 
-    return render(request,'clinic/record_add.html',{'form': form, 'formset': formset})                                           
+    return render(request,'clinic/record_add.html',{'form': form, 'formset': formset})   
+
+def patient_history(request,id):
+    # return most recent visits with this specific patient id
+    patient = get_object_or_404(Patient,pk=id)
+    visits = patient.patient_history.all()[:10] # patient_history is a related name attribute on Visit model
+    context = {
+        'visits': visits
+    }
+
+    return render(request,'clinic/visits.html',context)
+                                                
 
     
            

@@ -17,10 +17,17 @@
             </div>
             <div class="card-body">
 
-               {{visit.patient}}
+               <p>Date: <span style="border-bottom:dotted;">{{visit.visit_date}}</span></p>
+               <p>Patient: <span style="border-bottom:dotted;">{{visit.patient}}</span></p>
+               <p>Type: <span style="border-bottom:dotted;"> {{visit.get_category_display}}</span></p>
+               <p>Doctor: <span style="border-bottom:dotted;"> {{visit.attendant.get_full_name}} </span></p>
+               <p>Clinical Notes: <span style="border-bottom:dotted;"> {{visit.clinical_notes}} </span></p>
+               <p>Prescriptions: <span style="border-bottom:dotted;">{{visit.prescriptions}}</span></p>
+               <p>Lab Tests: <span style="border-bottom:dotted;">{{visit.lab_tests}}</span></p>
               
             </div>
           </div>
+          <br/><a href="{% url 'visits' %}">Back</a>
         </div>
       </div>
     </div>

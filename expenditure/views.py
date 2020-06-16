@@ -25,8 +25,10 @@ def expense_add(request):
         form = ExpenseForm(request.POST)
 
         if form.is_valid():
-            form.save()
-            return redirect(reverse('expenses'))
+            expense = form.save(commit=False)
+            expense.incurred_by = request.user
+            expense.save()
+            return redirect(reverse('dashboard'))
     else:
 
         form = ExpenseForm()

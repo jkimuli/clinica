@@ -24,9 +24,14 @@
                <p>Date of Birth: <span style="border-bottom:dotted;"> {{patient.dob}} </span></p>
                <p>Place of Residence: <span style="border-bottom:dotted;">{{patient.address}}</span></p>
                <p>Mobile Number: <span style="border-bottom:dotted;">{{patient.phone}}</span></p>
+               <br/>
+
+               <a href="{% url 'patient_history' patient.id %}" class="btn btn-success ">View Medical History</a>
               
             </div>
           </div>
+              
+              <br/><a href="{% url 'patients' %}">Back</a>
         </div>
       </div>
     </div>

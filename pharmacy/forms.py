@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Supplier,Product,Purchase
+from .models import Supplier,Product,Purchase,InvoiceLineItem,Invoice
 
 class SupplierForm(ModelForm):
     class Meta:
@@ -15,3 +15,14 @@ class PurchaseForm(ModelForm):
     class Meta:
         model = Purchase
         fields = '__all__'
+
+class InvoiceLineItemForm(ModelForm):
+    class Meta:
+        model = InvoiceLineItem
+        exclude=()  
+
+class InvoiceForm(ModelForm):
+    class Meta:
+        model = Invoice
+        exclude=()        
+

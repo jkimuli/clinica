@@ -7,6 +7,23 @@
 
 {% block content%} 
 
+  <!-- Breadcrumb -->
+  <section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'home'%}">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'patients' %}">Patients</a></li>
+        <li class="breadcrumb-item active">Clinic Records </li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
   <section id="visits" class="bg-light py-5">
 
     <div class="container">
@@ -20,7 +37,7 @@
                   <th> Date</th>
                   <th> Patient</th>
                   <th> Category</th>
-                  <th> Attendant</th>
+                  <th> Medical Person</th>
                   <th></th>
                   
               </tr>
@@ -31,8 +48,8 @@
                 <td>{{visit.visit_date}}</td>
                 <td>{{visit.patient}}</td>
                 <td>{{visit.get_category_display}}</td>
-                <td>{{visit.attendant}}</td>                
-                <td><a href="{% url 'visit' visit.id %}">Details</a></td>              
+                <td>{{visit.attendant.get_full_name}}</td>                
+                <td><a href="{% url 'visit' visit.id %}" class="btn btn-info">Details</a></td>              
 
             </tr>
             {% endfor%}

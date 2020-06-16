@@ -5,18 +5,7 @@
   | Home
 {% endblock title %}
 
-{% block content %}
-
-  <section id="showcase-inner" class="py-5 text-white">
-    <div class="container">
-      <div class="row text-center">
-        <div class="col-md-12">
-          <h1 class="display-4">About the Clinic</h1>
-          <p class="lead">Welcome to my Clinic Page</p>
-        </div>
-      </div>
-    </div>
-  </section>
+{% block content %}  
 
   <!-- Breadcrumb -->
   <section id="bc" class="mt-3">
@@ -38,46 +27,15 @@
       <div class="row">
         <div class="col-md-8">
           <h2>We look after your health</h2>
-          <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt, pariatur!</p>
+          <p class="lead">Welcome to my clinic! - Our mission is to look after your health</p>
           <img src="{% static 'img/about.jpg'%}" alt="">
-          <p class="mt-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis esse officia repudiandae ad saepe ex, amet
-            neque quod accusamus rem quia magnam magni dolorum facilis ullam minima perferendis? Exercitationem at quaerat
-            commodi id libero eveniet harum perferendis laborum molestias quia.</p>
+          <p class="mt-4"></p>
         </div>
-        <div class="col-md-4">
-          {% if mvp %}
-
-            {% for member in mvp %}
-
-               <div class="card">            
-                 <img class="card-img-top"   width="350" height="200" src="{{member.employee_photo.url}}" alt="Employee of the month">
-                 
-              <div class="card-body">
-              <h5 class="card-title">Employee of the Month</h5>
-              <h6 class="text-secondary">{{member}}</h6>
-              <p class="card-text">{{member.description}}
-              </p>
-            </div>
-          </div>
-
-            {% endfor %}
-
-          {% endif %} 
-          
-        </div>
+        
       </div>
     </div>
   </section>
-
-  <!-- Work -->
-  <section id="work" class="bg-dark text-white text-center">
-    <h2 class="display-4">We Work For You</h2>
-    <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem velit aperiam, unde aliquid at similique!</h4>
-    <hr>
-    {% if request.user.is_authenticated %}
-     <a href="{% url 'visits' %}" class="btn btn-secondary text-white btn-lg">View Clinic Records</a>
-    {% endif %} 
-  </section>
+  
 
   <!-- Team -->
   <section id="team" class="py-5">
@@ -96,7 +54,7 @@
               <p>
                 <i class="fas fa-phone"></i>{{employee.phone}}</p>
               <p>
-                <i class="fas fa-envelope-open"></i> {{employee.email}}</p>
+                <i class="fas fa-envelope-open"></i> {{employee.user.email}}</p>
             </div>
 
         {% endfor %}
@@ -110,7 +68,7 @@
         
       </div>
     </div>
-  </section> -->
+  </section>
   
 {% endblock content %}
 

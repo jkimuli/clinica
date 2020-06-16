@@ -4,7 +4,7 @@
 <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
     <div class="container">
-      <a class="navbar-brand" href="index.html">
+      <a class="navbar-brand" href="{% url 'home'%}">
         <img src="{% static 'img/logo.png' %}" class="logo" alt="">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup">
@@ -49,6 +49,7 @@
                    <input type="hidden">
                  
                  </form>
+            <li class="nav-item mr-3"> <a href="{% url 'employee_profile' %}" class="nav-link">Edit Profile</a></li>     
 
             
             

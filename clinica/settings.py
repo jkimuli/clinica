@@ -27,6 +27,8 @@ LOGIN_REDIRECT_URL = 'dashboard'
 
 LOGOUT_REDIRECT_URL = 'home'
 
+LOGIN_URL = 'login'
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -42,7 +44,6 @@ INSTALLED_APPS = (
     'pharmacy.apps.PharmacyConfig',
     'expenditure.apps.ExpenditureConfig',
     'assets.apps.AssetConfig',
-
     'crispy_forms',
   
    
@@ -104,17 +105,14 @@ WSGI_APPLICATION = 'clinica.wsgi.application'
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'USER':'django_db_user',
-        'NAME':'clinicdb',
-        'PASSWORD':'django123',
-    }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }    
 }
 
-AUTH_USER_MODEL = 'clinic.Employee'
+#AUTH_USER_MODEL = 'clinic.Employee'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -134,7 +132,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'clinica/static'),

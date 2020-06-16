@@ -5,6 +5,7 @@ from django.db import models
 category_choices = (
     ('DR','Drug'),
     ('LTK','Lab Test Kit'),
+    ('CON','Consultation Fee')
 )
 
 invoice_status = (
@@ -36,7 +37,15 @@ class Invoice(models.Model):
     customer = models.CharField(max_length=100,
                                 help_text="Enter a name to keep track of unpaid invoices",
                                 default="Cash Paid")
-    status = models.CharField(max_length=3,choices=invoice_status)                            
+    status = models.CharField(max_length=3,choices=invoice_status)
+
+    @property
+    def invoice_total(self):
+        #calculate the total amount for the invoice
+        total= 0
+        for item in self.line_items.all():
+            total += item.sub_total
+        return total    
 
 class InvoiceLineItem(models.Model):
     invoice = models.ForeignKey(Invoice,on_delete=models.CASCADE,related_name="line_items")

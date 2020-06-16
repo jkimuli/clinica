@@ -1,9 +1,10 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.urls import reverse
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+from django.forms import  inlineformset_factory
 
-from .forms import SupplierForm,ProductForm,PurchaseForm
-from .models import Supplier,Product,Purchase
+from .forms import SupplierForm,ProductForm,PurchaseForm,InvoiceLineItemForm,InvoiceForm
+from .models import Supplier,Product,Purchase,Invoice,InvoiceLineItem
 
 # Create your views here.
 
@@ -112,7 +113,42 @@ def product_edit(request,id):
         form.save()
         return redirect('products')
 
-    return render(request,'pharmacy/product_add.html', {'form': form, 'title':'Update Product'})            
+    return render(request,'pharmacy/product_add.html', {'form': form, 'title':'Update Product'}) 
+
+def invoice_index(request):
+    invoices = Invoice.objects.all()
+    paginator = Paginator(invoices,1)
+    page = request.GET.get('page')
+    paged_invoices = paginator.get_page(page) 
+    context = {
+        'invoices': paged_invoices
+    }
+
+    return render(request,'pharmacy/invoices.html', context)
+
+def invoice_add(request):
+    InvoiceLineFormset = inlineformset_factory(Invoice,InvoiceLineItem,form=InvoiceLineItemForm,extra=2, max_num=6,can_delete=True)
+    form = InvoiceForm(request.POST or None)
+    formset = InvoiceLineFormset(request.POST or None)
+
+    if form.is_valid() and formset.is_valid():
+            invoice = form.save()
+            line_items = formset.save(commit=False)
+            for item in line_items:
+                item.invoice = invoice                
+                item.save()                   
+
+            return redirect('invoices')  
+
+    return render(request,'pharmacy/invoice_add.html',{'form':form, 'formset': formset})
+
+def invoice_detail(request,id):
+    invoice = get_object_or_404(Invoice,pk=id)
+    context = {
+        
+    }
+
+    return render(request,'pharmacy/invoice.html',context)    
 
 
 
