@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.urls import reverse
 from django.db import models
-from django.conf import settings
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -44,7 +44,7 @@ class Patient(models.Model):
         return reverse('patient-detail', args=[self.pk])    
 
 class Employee(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name='profile')
     phone = models.CharField(max_length=30,verbose_name='Phone')
     alternate_phone = models.CharField(max_length=30,blank=True,null=True,verbose_name='Alternate Phone')
     designation = models.CharField(max_length=2,choices=STAFF_DESIGNATION,verbose_name='Designation')
@@ -66,7 +66,7 @@ class Visit(models.Model):
     patient = models.ForeignKey(Patient,on_delete=models.CASCADE,verbose_name="Patient",related_name='patient_history')
     category = models.CharField(max_length=4, choices=CLINIC_TYPE,verbose_name="Visit Type")
     clinical_notes = models.TextField(help_text='Examination and Diagnosis Carried Out')
-    attendant = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT,default=1,verbose_name='Medical Personel',related_name='visits_handled')
+    attendant = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='Medical Personel',related_name='visits_handled')
     visit_date = models.DateField(auto_now_add=True, verbose_name="Visit Date")
     lab_tests = models.TextField(verbose_name='Lab Tests Taken',blank=True)
     prescriptions = models.TextField(verbose_name='Prescriptions Required',blank=True)
