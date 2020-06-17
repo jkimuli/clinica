@@ -4,11 +4,9 @@ from clinic.models import Employee
 # Create your views here.
 
 def index(request):
-    employees = Employee.objects.all()
-    mvp = Employee.objects.filter(is_mvp=True).first()
+    employees = Employee.objects.all()    
     context = {
-        'employees': employees,
-        'mvp' : mvp
+        'employees': employees,        
     }
 
-    return render(request,'pages/index.html',context)
+    return render(request,'pages/index.html', context)

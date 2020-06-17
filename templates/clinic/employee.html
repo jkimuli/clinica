@@ -20,8 +20,8 @@
             <img  class="card-img-top" src={{employee.employee_photo.url}} >
             <div class="card-body">
 
-               <p>First Name: <span style="border-bottom:dotted;">{{employee.first_name}}</span></p>
-               <p>Last Name: <span style="border-bottom:dotted;">{{employee.last_name}}</span></p>
+               <p>First Name: <span style="border-bottom:dotted;">{{employee.user.first_name}}</span></p>
+               <p>Last Name: <span style="border-bottom:dotted;">{{employee.user.last_name}}</span></p>
                <p>Designation: <span style="border-bottom:dotted;"> {{employee.get_designation_display}}</span></p>
                <p>Phone: <span style="border-bottom:dotted;"> {{employee.phone}} </span></p>
                <p>Alternate Phone: <span style="border-bottom:dotted;"> {{employee.alternate_phone}} </span></p>

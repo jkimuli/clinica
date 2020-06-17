@@ -2,8 +2,6 @@ from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.forms import inlineformset_factory
-from django.views.generic.edit import CreateView
-
 from django.core.paginator import EmptyPage,PageNotAnInteger,Paginator
 
 from .models import Visit,Employee,Patient
@@ -31,7 +29,8 @@ def register(request):
             return render(request,'clinic/register_done.html',{'new_user': new_user})
     else:
         user_form = UserRegistrationForm()
-        return render(request,'clinic/register.html',{'form': user_form})
+
+    return render(request,'clinic/register.html',{'form': user_form})
 
 @login_required
 def edit(request):
@@ -50,12 +49,12 @@ def edit(request):
 
     return render(request,'clinic/employee_edit.html',{'user_form': user_form,'employee_form': employee_form})        
 
-
+@login_required
 def visit_index(request):
     # get the latest 50 clinic visits recorded in the database
 
     visits = Visit.objects.order_by('-visit_date')[:50] 
-    paginator = Paginator(visits,1)
+    paginator = Paginator(visits,10)
     page = request.GET.get('page')
     paged_visits = paginator.get_page(page)   
 
@@ -65,6 +64,7 @@ def visit_index(request):
 
     return render(request,'clinic/visits.html',context)
 
+@login_required
 def dashboard(request):
     #get currently logged in user
     user = request.user
@@ -80,9 +80,11 @@ def dashboard(request):
 
     return render(request,'clinic/dashboard.html', context )
 
+
+@login_required
 def patient_index(request):
     patients = Patient.objects.all()
-    paginator = Paginator(patients,1)
+    paginator = Paginator(patients,10)
     page = request.GET.get('page')
     paged_patients = paginator.get_page(page)
 
@@ -93,9 +95,10 @@ def patient_index(request):
     return render(request,'clinic/patients.html', context)
     
 
+@login_required
 def employee_index(request):
     employees = Employee.objects.all()
-    paginator = Paginator(employees,1)
+    paginator = Paginator(employees,10)
     page = request.GET.get('page')
     paged_employees = paginator.get_page(page)
 
@@ -105,6 +108,8 @@ def employee_index(request):
 
     return render(request,'clinic/employees.html',context)
 
+
+@login_required
 def visit_detail(request,visit_id):
     # return a single clinic record with the passed in visit_id
 
@@ -112,19 +117,25 @@ def visit_detail(request,visit_id):
 
     return render(request,'clinic/visit.html', {'visit': visit })
 
+
+@login_required
 def patient_detail(request,patient_id):
     # return a single patient record with given patient_id
 
     patient = get_object_or_404(Patient,pk=patient_id)
 
-    return render(request,'clinic/patient.html', {'patient': patient })    
+    return render(request,'clinic/patient.html', {'patient': patient }) 
 
+
+@login_required
 def employee_detail(request,employee_id):
     # return a single employee with given id
     
     employee = get_object_or_404(Employee,pk=employee_id)
-    return render(request,'clinic/employee.html', {'employee': employee })   
+    return render(request,'clinic/employee.html', {'employee': employee }) 
 
+
+@login_required
 def visit_add(request):
     VisitFormSet = inlineformset_factory(Patient, Visit, extra=1, can_delete=False,form=VisitForm)                                    
     if request.method == 'POST':
@@ -146,6 +157,8 @@ def visit_add(request):
 
     return render(request,'clinic/record_add.html',{'form': form, 'formset': formset})  
 
+
+@login_required
 def patient_edit(request,id):
     patient = get_object_or_404(Patient,pk=id)
     form = PatientForm(request.POST or None, instance=patient)
@@ -156,6 +169,8 @@ def patient_edit(request,id):
 
     return render(request, 'clinic/patient_add.html', {'form': form, 'title':'Update Patient'}) 
 
+
+@login_required
 def visit_edit(request,id):
     VisitFormSet = inlineformset_factory(Patient,Visit, extra=1, can_delete=False,form=VisitForm
                                     )
@@ -171,8 +186,10 @@ def visit_edit(request,id):
 
         return redirect('visits')
 
-    return render(request,'clinic/record_add.html',{'form': form, 'formset': formset})   
+    return render(request,'clinic/record_add.html',{'form': form, 'formset': formset}) 
 
+
+@login_required
 def patient_history(request,id):
     # return most recent visits with this specific patient id
     patient = get_object_or_404(Patient,pk=id)
