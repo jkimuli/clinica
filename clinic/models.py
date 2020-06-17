@@ -44,7 +44,7 @@ class Patient(models.Model):
         return reverse('patient-detail', args=[self.pk])    
 
 class Employee(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name='profile')
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
     phone = models.CharField(max_length=30,verbose_name='Phone')
     alternate_phone = models.CharField(max_length=30,blank=True,null=True,verbose_name='Alternate Phone')
     designation = models.CharField(max_length=2,choices=STAFF_DESIGNATION,verbose_name='Designation')
