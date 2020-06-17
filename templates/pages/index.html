@@ -44,17 +44,17 @@
       <div class="row text-center">
         {% if employees %}
 
-          {% for employee in employees %}
+          {% for user in employees %}
               <div class="col-md-4">
-               <img src="{{employee.employee_photo.url}}" width="350" height="200" alt="" class="rounded-circle mb-3">
-              <h4>{{employee}}</h4>
+               <img src="{{user.employee.employee_photo.url}}" width="350" height="200" alt="" class="rounded-circle mb-3">
+              <h4>{{user.get_full_name}}</h4>
               <p class="text-success">
                 <i class="fas fa-award text-success mb-3"></i> Employee</p>
               <hr>
               <p>
-                <i class="fas fa-phone"></i>{{employee.phone}}</p>
+                <i class="fas fa-phone"></i>{{user.employee.phone}}</p>
               <p>
-                <i class="fas fa-envelope-open"></i> {{employee.user.email}}</p>
+                <i class="fas fa-envelope-open"></i> {{user.email}}</p>
             </div>
 
         {% endfor %}
